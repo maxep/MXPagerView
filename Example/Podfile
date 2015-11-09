@@ -1,5 +1,7 @@
 source 'https://github.com/CocoaPods/Specs.git'
-use_frameworks!
+#use_frameworks!
+
+platform :ios, '7.0'
 
 target 'MXPagerView_Example', :exclusive => true do
   pod "MXPagerView", :path => "../"
@@ -7,6 +9,4 @@ end
 
 target 'MXPagerView_Tests', :exclusive => true do
   pod "MXPagerView", :path => "../"
-
-  
 end
