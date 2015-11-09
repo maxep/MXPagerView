@@ -19,7 +19,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
-                    <tabBarItem key="tabBarItem" title="MXPagerViewController" id="gxK-UF-4ws"/>
+                    <tabBarItem key="tabBarItem" title="MXPagerViewController" image="Dots" id="gxK-UF-4ws"/>
                     <connections>
                         <segue destination="W0i-HL-l6S" kind="custom" identifier="mx_page_0" customClass="MXPageSegue" id="1wX-G7-N9r"/>
                         <segue destination="2hQ-t1-kK3" kind="custom" identifier="mx_page_1" customClass="MXPageSegue" id="OHW-Hl-7An"/>
@@ -65,10 +65,14 @@
         <scene sceneID="Zfk-JU-Hji">
             <objects>
                 <navigationController id="tVI-g5-MgK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="MXPagerView" id="aSr-0m-Aue"/>
+                    <tabBarItem key="tabBarItem" title="MXPagerView" image="Dots" id="aSr-0m-Aue"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="nBD-Or-3C5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="JxO-lb-Hfe" kind="relationship" relationship="rootViewController" id="Vlf-8h-BR2"/>
@@ -78,36 +82,51 @@
             </objects>
             <point key="canvasLocation" x="403" y="-1977"/>
         </scene>
-        <!--MXPagerView-->
+        <!--Data Source-->
         <scene sceneID="hCx-PM-2gf">
             <objects>
                 <viewController id="JxO-lb-Hfe" customClass="MXPagerViewExample" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="5Cf-5A-Dhc"/>
-                        <viewControllerLayoutGuide type="bottom" id="QaB-jP-pPk"/>
+                        <viewControllerLayoutGuide type="top" id="uoh-Ow-Fty"/>
+                        <viewControllerLayoutGuide type="bottom" id="WsT-Cf-ub5"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="my5-mi-bdf">
+                    <view key="view" contentMode="scaleToFill" id="qNh-ne-SJ8">
                         <rect key="frame" x="0.0" y="64" width="600" height="487"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Utf-Nd-GBS" customClass="MXPagerView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="76b-HA-m2B" customClass="MXPagerView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="JxO-lb-Hfe" id="YdU-or-4tx"/>
+                                    <outlet property="delegate" destination="JxO-lb-Hfe" id="2wR-eT-vHU"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Utf-Nd-GBS" firstAttribute="top" secondItem="my5-mi-bdf" secondAttribute="top" id="3up-DW-Qec"/>
-                            <constraint firstItem="Utf-Nd-GBS" firstAttribute="bottom" secondItem="QaB-jP-pPk" secondAttribute="top" id="PkS-wB-PZ4"/>
-                            <constraint firstItem="Utf-Nd-GBS" firstAttribute="leading" secondItem="my5-mi-bdf" secondAttribute="leading" id="n6R-Zu-dd4"/>
-                            <constraint firstAttribute="trailing" secondItem="Utf-Nd-GBS" secondAttribute="trailing" id="pQL-ey-G3j"/>
+                            <constraint firstItem="76b-HA-m2B" firstAttribute="leading" secondItem="qNh-ne-SJ8" secondAttribute="leading" id="Buz-aX-thK"/>
+                            <constraint firstAttribute="trailing" secondItem="76b-HA-m2B" secondAttribute="trailing" id="Pwy-xC-Bg6"/>
+                            <constraint firstItem="76b-HA-m2B" firstAttribute="bottom" secondItem="WsT-Cf-ub5" secondAttribute="top" id="iE9-mI-6iw"/>
+                            <constraint firstItem="76b-HA-m2B" firstAttribute="top" secondItem="uoh-Ow-Fty" secondAttribute="bottom" id="tMo-UM-xHu"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" title="MXPagerView" id="dax-Tc-AG3"/>
-                    <navigationItem key="navigationItem" id="tBG-4p-btX"/>
+                    <navigationItem key="navigationItem" id="tBG-4p-btX">
+                        <barButtonItem key="leftBarButtonItem" title="&lt;" id="RaW-Pm-Iuc">
+                            <connections>
+                                <action selector="previous:" destination="JxO-lb-Hfe" id="xba-ZA-DBt"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="&gt;" id="Fyd-gQ-sPd">
+                            <connections>
+                                <action selector="next:" destination="JxO-lb-Hfe" id="3Vt-oT-GlP"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
-                        <outlet property="pagerView" destination="Utf-Nd-GBS" id="Zf1-R2-2bJ"/>
+                        <outlet property="pagerView" destination="76b-HA-m2B" id="V6s-0M-uNt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4vS-6Y-aFy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -223,4 +242,7 @@
             <point key="canvasLocation" x="1334" y="80"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Dots" width="20" height="20"/>
+    </resources>
 </document>

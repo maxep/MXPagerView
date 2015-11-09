@@ -49,8 +49,14 @@
 
 @end
 
+/**
+ The MXPagerViewController class creates a controller object that manages a pager view.
+ */
 @interface MXPagerViewController : UIViewController <MXPagerViewDelegate, MXPagerViewControllerDataSource>
 
+/**
+ Returns the pager view managed by the controller object.
+ */
 @property (nonatomic, strong, nonnull, readonly) MXPagerView *pagerView;
 
 @end
@@ -61,9 +67,37 @@
 extern NSString* _Nonnull const MXSeguePageIdentifierFormat;  // @"mx_page_%ld"
 
 /**
+ A UIViewController must adopt the MXPageSegueDelegate protocol in order to perfom MXPageSegue.
+ */
+@protocol MXPageSegueDelegate <NSObject>
+
+@required
+
+/**
+ Asks the delegate the page index of the destination view controller.
+ 
+ @return The destination page index.
+ */
+- (NSInteger)pageIndex;
+
+/**
+ Sets the requested page controller.
+ 
+ @param pageViewController The page view controller.
+ */
+- (void)setPageViewController:(nonnull __kindof UIViewController*)pageViewController;
+
+@end
+
+/**
  The MXPageSegue class creates a segue object to get pages from storyboard.
  */
 @interface MXPageSegue : UIStoryboardSegue
+
+/**
+ The source view controller that adopt the MXPageSegueDelegate protocol.
+ */
+@property (nonatomic, nonnull, readonly) __kindof UIViewController<MXPageSegueDelegate> *sourceViewController;
 
 /**
  Returns index representing page attached to segue.

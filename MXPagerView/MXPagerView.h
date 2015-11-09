@@ -96,17 +96,12 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
 /**
  Delegate instance that adopt the MXPagerViewDelegate.
  */
-@property (nonatomic,weak) id<MXPagerViewDelegate> delegate;
+@property (nonatomic,weak) IBOutlet id<MXPagerViewDelegate> delegate;
 
 /**
  Data source instance that adopt the MXPagerViewDataSource.
  */
-@property (nonatomic,weak) id<MXPagerViewDataSource> dataSource;
-
-/**
- The content scrolling view.
- */
-@property (nonatomic, readonly, nullable) UIScrollView *contentView;
+@property (nonatomic,weak) IBOutlet id<MXPagerViewDataSource> dataSource;
 
 /**
  The current selected page view.
@@ -132,6 +127,11 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  The pager transition style.
  */
 @property (nonatomic, assign) MXPagerViewTransitionStyle transitionStyle;
+
+/**
+ Default YES. turn off any dragging temporarily
+ */
+@property(nonatomic,getter=isScrollEnabled) BOOL scrollEnabled;
 
 /**
  Reloads everything from scratch. redisplays pages.

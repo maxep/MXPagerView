@@ -35,13 +35,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.pagerView.delegate = self;
-    self.pagerView.dataSource = self;
+    self.navigationItem.title = @"Page 0";
     
     self.pagerView.gutterWidth = 20;
     
     //Register UItableView as page
     [self.pagerView registerClass:[UITextView class] forPageReuseIdentifier:@"TextPage"];
+}
+
+- (IBAction)previous:(id)sender {
+    [self.pagerView showPageAtIndex:(self.pagerView.indexForSelectedPage - 1) animated:YES];
+}
+
+- (IBAction)next:(id)sender {
+    [self.pagerView showPageAtIndex:(self.pagerView.indexForSelectedPage + 1) animated:YES];
 }
 
 #pragma mark Properties
@@ -81,7 +88,7 @@
 #pragma mark <MXPagerViewDelegate>
 
 - (void) pagerView:(nonnull MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index {
-    NSLog(@"Did move to page with index %li", index);
+    self.navigationItem.title = [NSString stringWithFormat:@"Page %li", index];
 }
 
 #pragma -mark <MXPagerViewDataSource>

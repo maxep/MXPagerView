@@ -27,6 +27,9 @@
 @property (nonatomic, copy) NSString *reuseIdentifier;
 @end
 
+@interface MXContentView : UIScrollView <UIGestureRecognizerDelegate>
+@end
+
 @interface MXPagerView () <UIScrollViewDelegate>
 @property (nonatomic, strong) UIScrollView         *contentView;
 @property (nonatomic, strong) NSMutableDictionary   *pages;
@@ -39,9 +42,6 @@
     CGFloat     _index;
     NSInteger   _count;
 }
-
-
-@synthesize contentView = _contentView;
 
 - (void)layoutSubviews {
     if (_count <= 0) {
@@ -90,14 +90,15 @@
 }
 
 - (void) showPageAtIndex:(NSInteger)index animated:(BOOL)animated {
-    
-    //The tab behavior disable animation
-    animated = (self.transitionStyle == MXPagerViewTransitionStyleTab)? NO : animated;
-    
-    [self willMovePageToIndex:index];
-    [self setContentIndex:index animated:animated];
-    if(self.transitionStyle == MXPagerViewTransitionStyleTab) {
-        [self didMovePageToIndex:index];
+    if (index >= 0 && index < _count) {
+        //The tab behavior disable animation
+        animated = (self.transitionStyle == MXPagerViewTransitionStyleTab)? NO : animated;
+        
+        [self willMovePageToIndex:index];
+        [self setContentIndex:index animated:animated];
+        if(self.transitionStyle == MXPagerViewTransitionStyleTab) {
+            [self didMovePageToIndex:index];
+        }
     }
 }
 
@@ -147,7 +148,7 @@
 
 - (UIScrollView *)contentView {
     if (!_contentView) {
-        _contentView = [[UIScrollView alloc] init];
+        _contentView = [[MXContentView alloc] init];
         _contentView.delegate = self;
         _contentView.scrollsToTop = NO;
         _contentView.pagingEnabled = YES;
@@ -334,6 +335,25 @@
 
 - (void)prepareForReuse {
     
+}
+
+@end
+
+@implementation MXContentView
+
+#pragma mark <UIGestureRecognizerDelegate>
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        CGPoint velocity = [(UIPanGestureRecognizer*)gestureRecognizer velocityInView:self];
+        
+        //Lock vertical pan gesture.
+        if (fabs(velocity.x) < fabs(velocity.y)) {
+            return NO;
+        }
+    }
+    return YES;
 }
 
 @end

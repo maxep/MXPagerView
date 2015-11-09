@@ -22,12 +22,14 @@
 
 #import "MXPagerViewController.h"
 
-@interface MXPagerViewController ()
-@property (nonatomic,weak) UIViewController *pageViewController;
-@property (nonatomic) NSInteger pageIndex;
+@interface MXPagerViewController () <MXPageSegueDelegate>
+
 @end
 
-@implementation MXPagerViewController
+@implementation MXPagerViewController {
+    UIViewController *_pageViewController;
+    NSInteger _pageIndex;
+}
 
 @synthesize pagerView = _pagerView;
 
@@ -70,9 +72,9 @@
     if (self.storyboard) {
         @try {
             NSString *identifier = [self pagerView:pagerView segueIdentifierForPageAtIndex:index];
-            self.pageIndex = index;
+            _pageIndex = index;
             [self performSegueWithIdentifier:identifier sender:nil];
-            return self.pageViewController;
+            return _pageViewController;
         }
         @catch(NSException *exception) {}
     }
@@ -83,6 +85,16 @@
     return [NSString stringWithFormat:MXSeguePageIdentifierFormat, (long)index];
 }
 
+#pragma mark <MXPageSegueDelegate>
+
+- (NSInteger)pageIndex {
+    return _pageIndex;
+}
+
+- (void)setPageViewController:(UIViewController*)pageViewController{
+    _pageViewController = pageViewController;
+}
+
 @end
 
 #pragma mark MXPageSegue class
@@ -91,13 +103,14 @@ NSString * const MXSeguePageIdentifierFormat = @"mx_page_%ld";
 
 @implementation MXPageSegue
 
+@dynamic sourceViewController;
 @synthesize pageIndex = _pageIndex;
 
-- (instancetype)initWithIdentifier:(nullable NSString *)identifier source:(UIViewController *)source destination:(UIViewController *)destination {
+- (instancetype)initWithIdentifier:(nullable NSString *)identifier source:(UIViewController <MXPageSegueDelegate>*)source destination:(UIViewController *)destination {
     if (self = [super initWithIdentifier:identifier source:source destination:destination]) {
         
         if ([source respondsToSelector:@selector(pageIndex)]) {
-            _pageIndex = (NSInteger)[source performSelector:@selector(pageIndex)];
+            _pageIndex = source.pageIndex;
         }
     }
     return self;
@@ -105,7 +118,7 @@ NSString * const MXSeguePageIdentifierFormat = @"mx_page_%ld";
 
 - (void)perform {
     if ([self.sourceViewController respondsToSelector:@selector(setPageViewController:)]) {
-        [self.sourceViewController performSelector:@selector(setPageViewController:) withObject:self.destinationViewController];
+        self.sourceViewController.pageViewController = self.destinationViewController;
     }
 }
 
