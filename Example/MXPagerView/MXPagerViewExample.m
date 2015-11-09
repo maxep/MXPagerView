@@ -39,7 +39,7 @@
     
     self.pagerView.gutterWidth = 20;
     
-    //Register UItableView as page
+    //Register UITextView as page
     [self.pagerView registerClass:[UITextView class] forPageReuseIdentifier:@"TextPage"];
 }
 
@@ -91,17 +91,10 @@
     self.navigationItem.title = [NSString stringWithFormat:@"Page %li", index];
 }
 
-#pragma -mark <MXPagerViewDataSource>
+#pragma mark <MXPagerViewDataSource>
 
 - (NSInteger)numberOfPagesInPagerView:(MXPagerView *)pagerView {
     return 10;
-}
-
-- (NSString *)segmentedPager:(MXPagerView *)pagerView titleForSectionAtIndex:(NSInteger)index {
-    if (index < 3) {
-        return [@[@"Table", @"Web", @"Text"] objectAtIndex:index];
-    }
-    return [NSString stringWithFormat:@"Page %li", (long) index];
 }
 
 - (UIView *)pagerView:(MXPagerView *)pagerView viewForPageAtIndex:(NSInteger)index {
