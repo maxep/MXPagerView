@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/cocoapods/l/MXPagerView.svg?style=flat)](http://cocoapods.org/pods/MXPagerView)
 [![Platform](https://img.shields.io/cocoapods/p/MXPagerView.svg?style=flat)](http://cocoapods.org/pods/MXPagerView)
 
-MXPagerView is a pager view with the ability to reuse pages like you would do with a table view and cells. The MXPagerView also loads pages lazily, depending on the transition style, it will load the current page and neighbors and unload others pages.
+MXPagerView is a pager view with the ability to reuse pages like you would do with a table view and cells. Depending on the transition style, it will load the current page and neighbors and unload others pages.
 
 MXPagerViewController allows you to load pages from storyboard using the MXPageSegue.
 
@@ -19,7 +19,7 @@ pod try MXPagerView
 
 Or clone the repo and run `pod install` from the Example directory first. 
 
-As a UITableView, the MXPagerView calls data source methods to load pages. 
++ As a UITableView, the MXPagerView calls data source methods to load pages. 
 
 ```objective-c
 #pragma mark <MXPagerViewDataSource>
@@ -40,7 +40,7 @@ As a UITableView, the MXPagerView calls data source methods to load pages.
 }
 ```
 
-In order to reuse pages, first register the reusable view, e.g:
++ In order to reuse pages, first register the reusable view, e.g:
 
 ```objective-c
 - (void)viewDidLoad {
@@ -66,6 +66,10 @@ Then, dequeue a reusable page in the data source:
 ```
 
 The MXPagerView comes with a UIView category which exposed the reuse identifier of the page as well as the ```prepareForReuse``` method, this is called just before the page is returned from the pager view method ```dequeueReusablePageWithIdentifier:```.
+
++ Using MXPagerViewController in storyboard is super easy:
+
+![Demo](Example/MXPagerView.png)
 
 ## Installation
 
