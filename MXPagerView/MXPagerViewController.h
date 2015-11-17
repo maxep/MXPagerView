@@ -22,6 +22,8 @@
 
 #import "MXPagerView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  The MXSegmentedPager's data source object may adopt the MXSegmentedPagerControllerDataSource protocol in order to use the MXSegmentedPagerController with child UIViewController.
  */
@@ -35,7 +37,7 @@
  
  @return An object inheriting from UIViewController that the pager-view can use for the specified page.
  */
-- (nonnull __kindof UIViewController *)pagerView:(nonnull MXPagerView *)pagerView viewControllerForPageAtIndex:(NSInteger)index;
+- (__kindof UIViewController *)pagerView:(MXPagerView *)pagerView viewControllerForPageAtIndex:(NSInteger)index;
 
 /**
  Asks the data source for a segue identifier to insert in a particular page of the pager-view.
@@ -45,7 +47,7 @@
  
  @return The segue identifier that the pager-view can use for the specified page.
  */
-- (nonnull NSString *)pagerView:(nonnull MXPagerView *)pagerView segueIdentifierForPageAtIndex:(NSInteger)index;
+- (NSString *)pagerView:(MXPagerView *)pagerView segueIdentifierForPageAtIndex:(NSInteger)index;
 
 @end
 
@@ -57,14 +59,9 @@
 /**
  Returns the pager view managed by the controller object.
  */
-@property (nonatomic, strong, nonnull, readonly) MXPagerView *pagerView;
+@property (nonatomic,strong,readonly) MXPagerView *pagerView;
 
 @end
-
-/**
- Default string identifier format to be applied to segues on a storyboard
- */
-extern NSString* _Nonnull const MXSeguePageIdentifierFormat;  // @"mx_page_%ld"
 
 /**
  A UIViewController must adopt the MXPageSegueDelegate protocol in order to perfom MXPageSegue.
@@ -85,7 +82,7 @@ extern NSString* _Nonnull const MXSeguePageIdentifierFormat;  // @"mx_page_%ld"
  
  @param pageViewController The page view controller.
  */
-- (void)setPageViewController:(nonnull __kindof UIViewController*)pageViewController;
+- (void)setPageViewController:(__kindof UIViewController*)pageViewController;
 
 @end
 
@@ -97,11 +94,13 @@ extern NSString* _Nonnull const MXSeguePageIdentifierFormat;  // @"mx_page_%ld"
 /**
  The source view controller that adopt the MXPageSegueDelegate protocol.
  */
-@property (nonatomic, nonnull, readonly) __kindof UIViewController<MXPageSegueDelegate> *sourceViewController;
+@property (nonatomic,readonly) __kindof UIViewController<MXPageSegueDelegate> *sourceViewController;
 
 /**
  Returns index representing page attached to segue.
  */
-@property (nonatomic, readonly) NSInteger pageIndex;
+@property (nonatomic,readonly) NSInteger pageIndex;
 
 @end
+
+NS_ASSUME_NONNULL_END

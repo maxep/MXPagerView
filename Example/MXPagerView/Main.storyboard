@@ -21,10 +21,10 @@
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <tabBarItem key="tabBarItem" title="MXPagerViewController" image="Dots" id="gxK-UF-4ws"/>
                     <connections>
-                        <segue destination="W0i-HL-l6S" kind="custom" identifier="mx_page_0" customClass="MXPageSegue" id="1wX-G7-N9r"/>
+                        <segue destination="W0i-HL-l6S" kind="custom" identifier="0" customClass="MXPageSegue" id="1wX-G7-N9r"/>
                         <segue destination="2hQ-t1-kK3" kind="custom" identifier="mx_page_1" customClass="MXPageSegue" id="OHW-Hl-7An"/>
                         <segue destination="SZE-mm-b8t" kind="custom" identifier="mx_page_2" customClass="MXPageSegue" id="ufN-Rv-enh"/>
-                        <segue destination="O89-Uj-Uwf" kind="custom" identifier="mx_page_3" customClass="MXPageSegue" id="paL-Sm-nS3"/>
+                        <segue destination="O89-Uj-Uwf" kind="custom" identifier="3" customClass="MXPageSegue" id="paL-Sm-nS3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ycO-ua-Sfe" userLabel="First Responder" sceneMemberID="firstResponder"/>
