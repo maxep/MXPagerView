@@ -23,22 +23,18 @@
 #import <objc/runtime.h>
 #import "MXPagerView.h"
 
-@interface UIView ()
-@property (nonatomic, copy) NSString *reuseIdentifier;
-@end
-
 @interface MXContentView : UIScrollView <UIGestureRecognizerDelegate>
 @end
 
 @interface MXPagerView () <UIScrollViewDelegate>
-@property (nonatomic, strong) UIScrollView         *contentView;
+@property (nonatomic, strong) UIScrollView          *contentView;
 @property (nonatomic, strong) NSMutableDictionary   *pages;
 
 @property (nonatomic, strong) NSMutableDictionary   *registration;
 @property (nonatomic, strong) NSMutableArray        *reuseQueue;
 @end
 
-@implementation MXPagerView  {
+@implementation MXPagerView {
     CGFloat     _index;
     NSInteger   _count;
 }
@@ -137,8 +133,7 @@
         page = [[NSClassFromString(builder) alloc] init];
     }
     
-    page.reuseIdentifier = identifier;
-    [self.reuseQueue addObject:page];
+    objc_setAssociatedObject(page, @selector(reuseIdentifier), identifier, OBJC_ASSOCIATION_COPY);
     [page prepareForReuse];
     
     return page;
@@ -250,9 +245,16 @@
             
             if ([self.dataSource respondsToSelector:@selector(pagerView:viewForPageAtIndex:)]) {
                 
+                //Load page
                 UIView *page = [self.dataSource pagerView:self viewForPageAtIndex:index];
                 [self.contentView addSubview:page];
+                
+                //Save page
                 [self.pages setObject:page forKey:key];
+                if (page.reuseIdentifier) {
+                    [self.reuseQueue addObject:page];
+                }
+                
                 //Layout page
                 CGRect frame = self.bounds;
                 frame.origin = CGPointMake(self.contentView.bounds.size.width * index, 0);
@@ -325,12 +327,29 @@
 
 @implementation UIView (ReuseIdentifier)
 
-- (NSString *)reuseIdentifier {
-    return objc_getAssociatedObject(self, @selector(reuseIdentifier));
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [self init]) {
+        objc_setAssociatedObject(self, @selector(reuseIdentifier), reuseIdentifier, OBJC_ASSOCIATION_COPY);
+    }
+    return self;
 }
 
-- (void)setReuseIdentifier:(NSString *)reuseIdentifier {
-    objc_setAssociatedObject(self, @selector(reuseIdentifier), reuseIdentifier, OBJC_ASSOCIATION_COPY);
+- (instancetype)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [self initWithFrame:frame]) {
+        objc_setAssociatedObject(self, @selector(reuseIdentifier), reuseIdentifier, OBJC_ASSOCIATION_COPY);
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [self initWithCoder:aDecoder]) {
+        objc_setAssociatedObject(self, @selector(reuseIdentifier), reuseIdentifier, OBJC_ASSOCIATION_COPY);
+    }
+    return self;
+}
+
+- (NSString *)reuseIdentifier {
+    return objc_getAssociatedObject(self, @selector(reuseIdentifier));
 }
 
 - (void)prepareForReuse {

@@ -22,6 +22,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  The pager transition styles.
  */
@@ -46,7 +48,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  @param pagerView A pager object informing the delegate about the impending move.
  @param index     The selected page index.
  */
-- (void) pagerView:(nonnull MXPagerView *)pagerView willMoveToPageAtIndex:(NSInteger)index;
+- (void) pagerView:(MXPagerView *)pagerView willMoveToPageAtIndex:(NSInteger)index;
 
 /**
  Tells the delegate that the pager did move to a specified page.
@@ -54,7 +56,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  @param pagerView A pager object informing the delegate about the impending move.
  @param index     The selected page index.
  */
-- (void) pagerView:(nonnull MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index;
+- (void) pagerView:(MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index;
 
 @end
 
@@ -74,7 +76,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  
  @return The number of pages in pager.
  */
-- (NSInteger) numberOfPagesInPagerView:(nonnull MXPagerView *)pagerView;
+- (NSInteger) numberOfPagesInPagerView:(MXPagerView *)pagerView;
 
 /**
  Asks the data source for a view to insert in a particular page of the pager.
@@ -84,7 +86,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  
  @return An object inheriting from UIView that the pager can use for the specified page.
  */
-- (nullable __kindof UIView*) pagerView:(nonnull MXPagerView *)pagerView viewForPageAtIndex:(NSInteger)index;
+- (nullable __kindof UIView*) pagerView:(MXPagerView *)pagerView viewForPageAtIndex:(NSInteger)index;
 
 @end
 
@@ -165,7 +167,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  @param nib        A nib object that specifies the nib file to use to create the page.
  @param identifier The reuse identifier for the cell. This parameter must not be nil and must not be an empty string.
  */
-- (void)registerNib:(nullable UINib *)nib forPageReuseIdentifier:(nonnull NSString *)identifier;
+- (void)registerNib:(nullable UINib *)nib forPageReuseIdentifier:(NSString *)identifier;
 
 /**
  Registers a class for use in creating new page.
@@ -177,7 +179,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  @param pageClass  The class of a page that you want to use in the pager.
  @param identifier The reuse identifier for the page. This parameter must not be nil and must not be an empty string.
  */
-- (void)registerClass:(nullable Class)pageClass forPageReuseIdentifier:(nonnull NSString *)identifier;
+- (void)registerClass:(nullable Class)pageClass forPageReuseIdentifier:(NSString *)identifier;
 
 /**
  Returns a reusable page object located by its identifier.
@@ -188,7 +190,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  
  @return A page object with the associated identifier or nil if no such object exists in the reusable-page queue.
  */
-- (nullable __kindof UIView *)dequeueReusablePageWithIdentifier:(nonnull NSString *)identifier;
+- (nullable __kindof UIView *)dequeueReusablePageWithIdentifier:(NSString *)identifier;
 
 @end
 
@@ -203,8 +205,39 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
 @property (nonatomic, copy, readonly, nullable) NSString *reuseIdentifier;
 
 /**
+ Initializes a `UIView` object with a reuse identifier.
+ 
+ @param reuseIdentifier The view reuse identifier.
+ 
+ @return The initialized UIView object.
+ */
+- (instancetype)initWithReuseIdentifier:(nullable NSString *)reuseIdentifier;
+
+/**
+ Initializes a `UIView` object with a reuse identifier.
+ 
+ @param frame           The view frame.
+ @param reuseIdentifier The view reuse identifier.
+ 
+ @return The initialized UIView object.
+ */
+- (instancetype)initWithFrame:(CGRect)frame reuseIdentifier:(nullable NSString *)reuseIdentifier;
+
+/**
+ Initializes a `UIView` object with a reuse identifier.
+ 
+ @param aDecoder        The view decoder.
+ @param reuseIdentifier The view reuse identifier.
+ 
+ @return The initialized UIView object.
+ */
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder reuseIdentifier:(nullable NSString *)reuseIdentifier;
+
+/**
  if the page is reusable (has a reuse identifier), this is called just before the page is returned from the pager view method dequeueReusablePageWithIdentifier:.
  */
 - (void) prepareForReuse;
 
 @end
+
+NS_ASSUME_NONNULL_END
