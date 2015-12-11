@@ -82,7 +82,7 @@
     //Loads the current selected page
     [self loadPageAtIndex:_index];
     
-    [self layoutIfNeeded];
+    [self setNeedsLayout];
 }
 
 - (void) showPageAtIndex:(NSInteger)index animated:(BOOL)animated {
