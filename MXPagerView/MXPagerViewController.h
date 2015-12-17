@@ -86,6 +86,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+extern NSString * const MXSeguePageIdentifierFormat; // @"mx_page_%ld"
+
 /**
  The MXPageSegue class creates a segue object to get pages from storyboard.
  */

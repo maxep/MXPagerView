@@ -75,14 +75,14 @@
     }
     [self.pages removeAllObjects];
     
-    if ([self.dataSource respondsToSelector:@selector(numberOfPagesInPagerView:)]) {
-        _count = [self.dataSource numberOfPagesInPagerView:self];
+    //Updates index and loads the current selected page
+    if ( (_count = [self.dataSource numberOfPagesInPagerView:self]) > 0) {
+        if (_index >= _count)
+            _index = _count-1;
+        
+        [self loadPageAtIndex:_index];
+        [self setNeedsLayout];
     }
-    
-    //Loads the current selected page
-    [self loadPageAtIndex:_index];
-    
-    [self setNeedsLayout];
 }
 
 - (void) showPageAtIndex:(NSInteger)index animated:(BOOL)animated {
@@ -243,23 +243,20 @@
         
         if (!self.pages[key] && (index >= 0) && (index < _count)) {
             
-            if ([self.dataSource respondsToSelector:@selector(pagerView:viewForPageAtIndex:)]) {
-                
-                //Load page
-                UIView *page = [self.dataSource pagerView:self viewForPageAtIndex:index];
-                [self.contentView addSubview:page];
-                
-                //Save page
-                [self.pages setObject:page forKey:key];
-                if (page.reuseIdentifier) {
-                    [self.reuseQueue addObject:page];
-                }
-                
-                //Layout page
-                CGRect frame = self.bounds;
-                frame.origin = CGPointMake(self.contentView.bounds.size.width * index, 0);
-                page.frame = frame;
+            //Load page
+            UIView *page = [self.dataSource pagerView:self viewForPageAtIndex:index];
+            [self.contentView addSubview:page];
+            
+            //Save page
+            [self.pages setObject:page forKey:key];
+            if (page.reuseIdentifier) {
+                [self.reuseQueue addObject:page];
             }
+            
+            //Layout page
+            CGRect frame = self.bounds;
+            frame.origin = CGPointMake(self.contentView.bounds.size.width * index, 0);
+            page.frame = frame;
         }
     };
     

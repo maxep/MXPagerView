@@ -82,7 +82,7 @@
 }
 
 - (NSString *)pagerView:(MXPagerView *)pagerView segueIdentifierForPageAtIndex:(NSInteger)index {
-    return [@(index) stringValue];
+    return [NSString stringWithFormat:MXSeguePageIdentifierFormat, (long)index];
 }
 
 #pragma mark <MXPageSegueDelegate>
@@ -98,6 +98,8 @@
 @end
 
 #pragma mark MXPageSegue class
+
+NSString * const MXSeguePageIdentifierFormat = @"mx_page_%ld";
 
 @implementation MXPageSegue
 
