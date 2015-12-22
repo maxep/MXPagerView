@@ -106,6 +106,11 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
 @property (nonatomic,weak) IBOutlet id<MXPagerViewDataSource> dataSource;
 
 /**
+ The scrolling content view.
+ */
+@property (nonatomic, readonly) UIScrollView *contentView;
+
+/**
  The current selected page view.
  */
 @property (nonatomic, readonly, nullable) __kindof UIView *selectedPage;
