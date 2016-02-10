@@ -1,6 +1,6 @@
 // MXPagerView.h
 //
-// Copyright (c) 2015 Maxime Epain
+// Copyright (c) 2016 Maxime Epain
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
 /**
  The delegate of a MXPagerView object may adopt the MXPagerViewDelegate protocol. Optional methods of the protocol allow the delegate to manage selections.
  */
-@protocol MXPagerViewDelegate <NSObject>
+@protocol MXPagerViewDelegate <UIScrollViewDelegate>
 
 @optional
 /**
@@ -57,6 +57,70 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  @param index     The selected page index.
  */
 - (void) pagerView:(MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index;
+
+/**
+ Tells the delegate that the pager is about to show the specified page.
+ 
+ @param pagerView A pager object informing the delegate about the impending move.
+ @param page      The showing page.
+ */
+- (void) pagerView:(MXPagerView *)pagerView willShowPage:(UIView *)page;
+
+/**
+ Tells the delegate that the pager did show to a specified page.
+ 
+ @param pagerView A pager object informing the delegate about the impending move.
+ @param page      The shown page.
+ */
+- (void) pagerView:(MXPagerView *)pagerView didShowPage:(UIView *)page;
+
+/**
+ Tells the delegate that the pager is about to hide the specified page.
+ 
+ @param pagerView A pager object informing the delegate about the impending move.
+ @param page      The hidding page.
+ */
+- (void) pagerView:(MXPagerView *)pagerView willHidePage:(UIView *)page;
+
+/**
+ Tells the delegate that the pager did hide to a specified page.
+ 
+ @param pagerView A pager object informing the delegate about the impending move.
+ @param page      The hidden page.
+ */
+- (void) pagerView:(MXPagerView *)pagerView didHidePage:(UIView *)page;
+
+/**
+ Tells the delegate that the pager is about to load the specified page.
+ 
+ @param pagerView A pager object informing the delegate about the impending move.
+ @param page      The loading page.
+ */
+- (void) pagerView:(MXPagerView *)pagerView willLoadPage:(UIView *)page;
+
+/**
+ Tells the delegate that the pager did load page.
+ 
+ @param pagerView A pager object informing the delegate about the impending move.
+ @param page      The loaded page.
+ */
+- (void) pagerView:(MXPagerView *)pagerView didLoadPage:(UIView *)page;
+
+/**
+ Tells the delegate that the pager is about to unload the specified page.
+ 
+ @param pagerView A pager object informing the delegate about the impending move.
+ @param page      The unloading page.
+ */
+- (void) pagerView:(MXPagerView *)pagerView willUnloadPage:(UIView *)page;
+
+/**
+ Tells the delegate that the pager did unload page.
+ 
+ @param pagerView A pager object informing the delegate about the impending move.
+ @param page      The unloaded page.
+ */
+- (void) pagerView:(MXPagerView *)pagerView didUnloadPage:(UIView *)page;
 
 @end
 

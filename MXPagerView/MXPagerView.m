@@ -1,6 +1,6 @@
 // MXPagerView.m
 //
-// Copyright (c) 2015 Maxime Epain
+// Copyright (c) 2016 Maxime Epain
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -211,6 +211,14 @@
     return [self.pages allValues];
 }
 
+- (void)setDelegate:(id<MXPagerViewDelegate>)delegate {
+    _delegate = delegate;
+    // Scroll view delegate caches whether the delegate responds to some of the delegate
+    // methods, so we need to force it to re-evaluate if the delegate responds to them
+    self.contentView.delegate = nil;
+    self.contentView.delegate = self;
+}
+
 #pragma mark Private Methods
 
 - (void) willMovePageToIndex:(NSInteger) index {
@@ -220,16 +228,37 @@
         if ([self.delegate respondsToSelector:@selector(pagerView:willMoveToPageAtIndex:)]) {
             [self.delegate pagerView:self willMoveToPageAtIndex:index];
         }
+        
+        if ([self.delegate respondsToSelector:@selector(pagerView:willHidePage:)]) {
+            UIView *page = [self pageAtIndex:_index];
+            [self.delegate pagerView:self willHidePage:page];
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(pagerView:willShowPage:)]) {
+            UIView *page = [self pageAtIndex:index];
+            [self.delegate pagerView:self willShowPage:page];
+        }
     }
 }
 
-- (void) didMovePageToIndex:(NSInteger) index {
+- (void) didMovePageToIndex:(NSInteger)index {
     if (index != _index) {
-        _index = index;
         
         if ([self.delegate respondsToSelector:@selector(pagerView:didMoveToPageAtIndex:)]) {
             [self.delegate pagerView:self didMoveToPageAtIndex:index];
         }
+        
+        if ([self.delegate respondsToSelector:@selector(pagerView:didHidePage:)]) {
+            UIView *page = [self pageAtIndex:_index];
+            [self.delegate pagerView:self didHidePage:page];
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(pagerView:didShowPage:)]) {
+            UIView *page = [self pageAtIndex:index];
+            [self.delegate pagerView:self didShowPage:page];
+        }
+        
+        _index = index;
         
         //The page did change, now unload hidden pages
         [self unLoadHiddenPages];
@@ -245,6 +274,16 @@
             
             //Load page
             UIView *page = [self.dataSource pagerView:self viewForPageAtIndex:index];
+            
+            //Layout page
+            CGRect frame = self.bounds;
+            frame.origin = CGPointMake(self.contentView.bounds.size.width * index, 0);
+            page.frame = frame;
+            
+            if ([self.delegate respondsToSelector:@selector(pagerView:willLoadPage:)]) {
+                [self.delegate pagerView:self willLoadPage:page];
+            }
+            
             [self.contentView addSubview:page];
             
             //Save page
@@ -253,10 +292,9 @@
                 [self.reuseQueue addObject:page];
             }
             
-            //Layout page
-            CGRect frame = self.bounds;
-            frame.origin = CGPointMake(self.contentView.bounds.size.width * index, 0);
-            page.frame = frame;
+            if ([self.delegate respondsToSelector:@selector(pagerView:didLoadPage:)]) {
+                [self.delegate pagerView:self didLoadPage:page];
+            }
         }
     };
     
@@ -283,8 +321,17 @@
                 ( (index != _index-1) && (index != _index+1) )) {
                 
                 UIView *page = self.pages[key];
+                
+                if ([self.delegate respondsToSelector:@selector(pagerView:willUnloadPage:)]) {
+                    [self.delegate pagerView:self willUnloadPage:page];
+                }
+                
                 [page removeFromSuperview];
                 [toUnLoad addObject:key];
+                
+                if ([self.delegate respondsToSelector:@selector(pagerView:didUnloadPage:)]) {
+                    [self.delegate pagerView:self didUnloadPage:page];
+                }
             }
         }
     }
@@ -305,9 +352,18 @@
     if (!(position % width)) {
         [self didMovePageToIndex:(position / width)];
     }
+    
+    if ([self.delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [self.delegate scrollViewDidEndDecelerating:self.contentView];
+    }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    
+    if ([self.delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        [self.delegate scrollViewWillEndDragging:self.contentView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
+    
     NSInteger position  = targetContentOffset->x;
     NSInteger width     = scrollView.bounds.size.width;
     
@@ -317,7 +373,24 @@
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    [self scrollViewDidEndDecelerating:scrollView];
+    NSInteger position  = scrollView.contentOffset.x;
+    NSInteger width     = scrollView.bounds.size.width;
+    
+    if (!(position % width)) {
+        [self didMovePageToIndex:(position / width)];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+        [self.delegate scrollViewDidEndScrollingAnimation:self.contentView];
+    }
+}
+
+- (BOOL)respondsToSelector:(SEL)selector {
+    return [self.delegate respondsToSelector:selector] || [super respondsToSelector:selector];
+}
+
+- (void)forwardInvocation:(NSInvocation *)invocation {
+    [invocation invokeWithTarget:self.delegate];
 }
 
 @end

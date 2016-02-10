@@ -1,6 +1,6 @@
 // MXPagerViewController.m
 //
-// Copyright (c) 2015 Maxime Epain
+// Copyright (c) 2016 Maxime Epain
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
 #import "MXPagerViewController.h"
 
 @interface MXPagerViewController () <MXPageSegueDelegate>
-
 @end
 
 @implementation MXPagerViewController {
@@ -48,9 +47,20 @@
     return _pagerView;
 }
 
+#pragma mark Private
+
+- (UIViewController *) controllerForPage:(UIView *)page {
+    for (UIViewController *child in self.childViewControllers) {
+        if (child.view == page) {
+            return child;
+        }
+    }
+    return nil;
+}
+
 #pragma mark <MXPagerViewControllerDataSource>
 
-- (NSInteger) numberOfPagesInPagerView:(nonnull MXPagerView *)pagerView {
+- (NSInteger)numberOfPagesInPagerView:(nonnull MXPagerView *)pagerView {
     NSArray *segues = [self valueForKey:@"storyboardSegueTemplates"] ;
     return segues.count;
 }
@@ -61,8 +71,6 @@
     
     if (viewController) {
         [self addChildViewController:viewController];
-        [viewController didMoveToParentViewController:self];
-        
         return viewController.view;
     }
     return nil;
@@ -83,6 +91,57 @@
 
 - (NSString *)pagerView:(MXPagerView *)pagerView segueIdentifierForPageAtIndex:(NSInteger)index {
     return [NSString stringWithFormat:MXSeguePageIdentifierFormat, (long)index];
+}
+
+#pragma mark <MXPagerViewDelegate>
+
+- (void) scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"%f", scrollView.contentOffset.x);
+}
+
+- (void)pagerView:(MXPagerView *)pagerView willLoadPage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    [childViewController willMoveToParentViewController:self];
+}
+
+- (void)pagerView:(MXPagerView *)pagerView willUnloadPage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    [childViewController willMoveToParentViewController:nil];
+}
+
+- (void)pagerView:(MXPagerView *)pagerView didLoadPage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    [childViewController didMoveToParentViewController:self];
+}
+
+- (void)pagerView:(MXPagerView *)pagerView didUnloadPage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    [childViewController removeFromParentViewController];
+    [childViewController didMoveToParentViewController:nil];
+}
+
+- (void)pagerView:(MXPagerView *)pagerView willShowPage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    BOOL animated = pagerView.transitionStyle == MXPagerViewTransitionStyleScroll;
+    [childViewController viewWillAppear:animated];
+}
+
+- (void)pagerView:(MXPagerView *)pagerView willHidePage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    BOOL animated = pagerView.transitionStyle == MXPagerViewTransitionStyleScroll;
+    [childViewController viewWillDisappear:animated];
+}
+
+- (void)pagerView:(MXPagerView *)pagerView didShowPage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    BOOL animated = pagerView.transitionStyle == MXPagerViewTransitionStyleScroll;
+    [childViewController viewDidAppear:animated];
+}
+
+- (void)pagerView:(MXPagerView *)pagerView didHidePage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    BOOL animated = pagerView.transitionStyle == MXPagerViewTransitionStyleScroll;
+    [childViewController viewDidDisappear:animated];
 }
 
 #pragma mark <MXPageSegueDelegate>
