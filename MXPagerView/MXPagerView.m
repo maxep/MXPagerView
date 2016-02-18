@@ -222,22 +222,20 @@
 #pragma mark Private Methods
 
 - (void) willMovePageToIndex:(NSInteger) index {
-    if (index != _index) {
-        [self loadPageAtIndex:index];
-        
-        if ([self.delegate respondsToSelector:@selector(pagerView:willMoveToPageAtIndex:)]) {
-            [self.delegate pagerView:self willMoveToPageAtIndex:index];
-        }
-        
-        if ([self.delegate respondsToSelector:@selector(pagerView:willHidePage:)]) {
-            UIView *page = [self pageAtIndex:_index];
-            [self.delegate pagerView:self willHidePage:page];
-        }
-        
-        if ([self.delegate respondsToSelector:@selector(pagerView:willShowPage:)]) {
-            UIView *page = [self pageAtIndex:index];
-            [self.delegate pagerView:self willShowPage:page];
-        }
+    [self loadPageAtIndex:index];
+    
+    if ([self.delegate respondsToSelector:@selector(pagerView:willMoveToPageAtIndex:)]) {
+        [self.delegate pagerView:self willMoveToPageAtIndex:index];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(pagerView:willHidePage:)]) {
+        UIView *page = [self pageAtIndex:_index];
+        [self.delegate pagerView:self willHidePage:page];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(pagerView:willShowPage:)]) {
+        UIView *page = [self pageAtIndex:index];
+        [self.delegate pagerView:self willShowPage:page];
     }
 }
 
@@ -349,8 +347,9 @@
     NSInteger position  = scrollView.contentOffset.x;
     NSInteger width     = scrollView.bounds.size.width;
     
-    if (!(position % width)) {
-        [self didMovePageToIndex:(position / width)];
+    NSInteger index = floor(position/width);
+    if (index >= 0) {
+        [self didMovePageToIndex:index];
     }
     
     if ([self.delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
@@ -367,9 +366,11 @@
     NSInteger position  = targetContentOffset->x;
     NSInteger width     = scrollView.bounds.size.width;
     
-    if (!(position % width)) {
-        [self willMovePageToIndex:(position / width)];
+    NSInteger index = floor(position/width);
+    if (index >= 0) {
+        [self willMovePageToIndex:index];
     }
+
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
