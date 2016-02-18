@@ -370,7 +370,6 @@
     if (index >= 0) {
         [self willMovePageToIndex:index];
     }
-
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
