@@ -347,7 +347,7 @@
     NSInteger position  = scrollView.contentOffset.x;
     NSInteger width     = scrollView.bounds.size.width;
     
-    NSInteger index = floor(position/width);
+    NSInteger index = position / width;
     if (index >= 0) {
         [self didMovePageToIndex:index];
     }
@@ -366,7 +366,7 @@
     NSInteger position  = targetContentOffset->x;
     NSInteger width     = scrollView.bounds.size.width;
     
-    NSInteger index = floor(position/width);
+    NSInteger index = position / width;
     if (index >= 0) {
         [self willMovePageToIndex:index];
     }
