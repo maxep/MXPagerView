@@ -70,6 +70,7 @@
     UIViewController *viewController = [self pagerView:pagerView viewControllerForPageAtIndex:index];
     
     if (viewController) {
+        [viewController willMoveToParentViewController:self];
         [self addChildViewController:viewController];
         return viewController.view;
     }
@@ -95,23 +96,14 @@
 
 #pragma mark <MXPagerViewDelegate>
 
-- (void) scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"%f", scrollView.contentOffset.x);
-}
-
-- (void)pagerView:(MXPagerView *)pagerView willLoadPage:(UIView *)page {
+- (void)pagerView:(MXPagerView *)pagerView didLoadPage:(UIView *)page {
     UIViewController *childViewController = [self controllerForPage:page];
-    [childViewController willMoveToParentViewController:self];
+    [childViewController didMoveToParentViewController:self];
 }
 
 - (void)pagerView:(MXPagerView *)pagerView willUnloadPage:(UIView *)page {
     UIViewController *childViewController = [self controllerForPage:page];
     [childViewController willMoveToParentViewController:nil];
-}
-
-- (void)pagerView:(MXPagerView *)pagerView didLoadPage:(UIView *)page {
-    UIViewController *childViewController = [self controllerForPage:page];
-    [childViewController didMoveToParentViewController:self];
 }
 
 - (void)pagerView:(MXPagerView *)pagerView didUnloadPage:(UIView *)page {
@@ -126,16 +118,16 @@
     [childViewController viewWillAppear:animated];
 }
 
-- (void)pagerView:(MXPagerView *)pagerView willHidePage:(UIView *)page {
-    UIViewController *childViewController = [self controllerForPage:page];
-    BOOL animated = pagerView.transitionStyle == MXPagerViewTransitionStyleScroll;
-    [childViewController viewWillDisappear:animated];
-}
-
 - (void)pagerView:(MXPagerView *)pagerView didShowPage:(UIView *)page {
     UIViewController *childViewController = [self controllerForPage:page];
     BOOL animated = pagerView.transitionStyle == MXPagerViewTransitionStyleScroll;
     [childViewController viewDidAppear:animated];
+}
+
+- (void)pagerView:(MXPagerView *)pagerView willHidePage:(UIView *)page {
+    UIViewController *childViewController = [self controllerForPage:page];
+    BOOL animated = pagerView.transitionStyle == MXPagerViewTransitionStyleScroll;
+    [childViewController viewWillDisappear:animated];
 }
 
 - (void)pagerView:(MXPagerView *)pagerView didHidePage:(UIView *)page {
