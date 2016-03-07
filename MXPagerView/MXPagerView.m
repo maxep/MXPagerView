@@ -242,6 +242,8 @@
 - (void) didMovePageToIndex:(NSInteger)index {
     if (index != _index) {
         
+        _index = index;
+
         if ([self.delegate respondsToSelector:@selector(pagerView:didMoveToPageAtIndex:)]) {
             [self.delegate pagerView:self didMoveToPageAtIndex:index];
         }
@@ -255,9 +257,7 @@
             UIView *page = [self pageAtIndex:index];
             [self.delegate pagerView:self didShowPage:page];
         }
-        
-        _index = index;
-        
+                
         //The page did change, now unload hidden pages
         [self unLoadHiddenPages];
     }
