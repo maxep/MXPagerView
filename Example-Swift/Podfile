@@ -3,6 +3,6 @@ use_frameworks!
 
 platform :ios, '8.0'
 
-target 'MXPagerView-Swift', :exclusive => true do
+target 'MXPagerView-Swift' do
   pod "MXPagerView", :path => "../"
 end

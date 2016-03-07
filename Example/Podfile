@@ -3,10 +3,10 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 platform :ios, '7.0'
 
-target 'MXPagerView_Example', :exclusive => true do
+target 'MXPagerView_Example' do
   pod "MXPagerView", :path => "../"
 end
 
-target 'MXPagerView_Tests', :exclusive => true do
+target 'MXPagerView_Tests' do
   pod "MXPagerView", :path => "../"
 end
