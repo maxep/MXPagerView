@@ -221,7 +221,7 @@
 
 #pragma mark Private Methods
 
-- (void) willMovePageToIndex:(NSInteger) index {
+- (void) willMovePageToIndex:(NSInteger)index {
     [self loadPageAtIndex:index];
     
     if ([self.delegate respondsToSelector:@selector(pagerView:willMoveToPageAtIndex:)]) {
@@ -242,15 +242,15 @@
 - (void) didMovePageToIndex:(NSInteger)index {
     if (index != _index) {
         
+        if ([self.delegate respondsToSelector:@selector(pagerView:didHidePage:)]) {
+            UIView *page = [self pageAtIndex:_index];
+            [self.delegate pagerView:self didHidePage:page];
+        }
+        
         _index = index;
 
         if ([self.delegate respondsToSelector:@selector(pagerView:didMoveToPageAtIndex:)]) {
             [self.delegate pagerView:self didMoveToPageAtIndex:index];
-        }
-        
-        if ([self.delegate respondsToSelector:@selector(pagerView:didHidePage:)]) {
-            UIView *page = [self pageAtIndex:_index];
-            [self.delegate pagerView:self didHidePage:page];
         }
         
         if ([self.delegate respondsToSelector:@selector(pagerView:didShowPage:)]) {
@@ -263,7 +263,7 @@
     }
 }
 
-- (void) loadPageAtIndex:(NSInteger) index {
+- (void) loadPageAtIndex:(NSInteger)index {
     
     void(^loadPage)(NSInteger index) = ^(NSInteger index) {
         NSNumber *key = [NSNumber numberWithInteger:index];
