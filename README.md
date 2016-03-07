@@ -2,6 +2,7 @@
 
 [![CI Status](http://img.shields.io/travis/maxep/MXPagerView.svg?style=flat)](https://travis-ci.org/maxep/MXPagerView)
 [![Version](https://img.shields.io/cocoapods/v/MXPagerView.svg?style=flat)](http://cocoapods.org/pods/MXPagerView)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![License](https://img.shields.io/cocoapods/l/MXPagerView.svg?style=flat)](http://cocoapods.org/pods/MXPagerView)
 [![Platform](https://img.shields.io/cocoapods/p/MXPagerView.svg?style=flat)](http://cocoapods.org/pods/MXPagerView)
 

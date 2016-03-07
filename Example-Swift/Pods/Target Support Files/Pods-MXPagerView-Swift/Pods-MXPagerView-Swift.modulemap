@@ -1,0 +1,6 @@
+framework module Pods_MXPagerView_Swift {
+  umbrella header "Pods-MXPagerView-Swift-umbrella.h"
+
+  export *
+  module * { export * }
+}
