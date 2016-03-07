@@ -66,7 +66,7 @@
     [super layoutSubviews];
 }
 
-- (void) reloadData {
+- (void)reloadData {
     
     // Removes all current pages.
     for (NSNumber *key in self.pages) {
@@ -85,14 +85,14 @@
     }
 }
 
-- (void) showPageAtIndex:(NSInteger)index animated:(BOOL)animated {
+- (void)showPageAtIndex:(NSInteger)index animated:(BOOL)animated {
     if (index >= 0 && index < _count) {
         //The tab behavior disable animation
         animated = (self.transitionStyle == MXPagerViewTransitionStyleTab)? NO : animated;
         
         [self willMovePageToIndex:index];
         [self setContentIndex:index animated:animated];
-        if(self.transitionStyle == MXPagerViewTransitionStyleTab) {
+        if(!animated) {
             [self didMovePageToIndex:index];
         }
     }
