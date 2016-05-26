@@ -87,7 +87,7 @@
 
 #pragma mark <MXPagerViewDelegate>
 
-- (void) pagerView:(nonnull MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index {
+- (void)pagerView:(nonnull MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index {
     self.navigationItem.title = [NSString stringWithFormat:@"Page %li", index];
 }
 
@@ -120,7 +120,7 @@
 
 #pragma mark <UITableViewDataSource>
 
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 50;
 }
 
@@ -135,6 +135,5 @@
     
     return cell;
 }
-
 
 @end

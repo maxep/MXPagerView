@@ -49,7 +49,7 @@
 
 #pragma mark Private
 
-- (UIViewController *) controllerForPage:(UIView *)page {
+- (UIViewController *)controllerForPage:(UIView *)page {
     for (UIViewController *child in self.childViewControllers) {
         if (child.view == page) {
             return child;

@@ -27,7 +27,7 @@
 @end
 
 @interface MXPagerView () <UIScrollViewDelegate>
-@property (nonatomic, strong) UIScrollView          *contentView;
+@property (nonatomic, strong) MXContentView         *contentView;
 @property (nonatomic, strong) NSMutableDictionary   *pages;
 
 @property (nonatomic, strong) NSMutableDictionary   *registration;
@@ -141,7 +141,7 @@
 
 #pragma mark Properties
 
-- (UIScrollView *)contentView {
+- (MXContentView *)contentView {
     if (!_contentView) {
         _contentView = [[MXContentView alloc] init];
         _contentView.delegate = self;
@@ -211,17 +211,9 @@
     return [self.pages allValues];
 }
 
-- (void)setDelegate:(id<MXPagerViewDelegate>)delegate {
-    _delegate = delegate;
-    // Scroll view delegate caches whether the delegate responds to some of the delegate
-    // methods, so we need to force it to re-evaluate if the delegate responds to them
-    self.contentView.delegate = nil;
-    self.contentView.delegate = self;
-}
-
 #pragma mark Private Methods
 
-- (void) willMovePageToIndex:(NSInteger)index {
+- (void)willMovePageToIndex:(NSInteger)index {
     [self loadPageAtIndex:index];
     
     if ([self.delegate respondsToSelector:@selector(pagerView:willMoveToPageAtIndex:)]) {
@@ -239,7 +231,7 @@
     }
 }
 
-- (void) didMovePageToIndex:(NSInteger)index {
+- (void)didMovePageToIndex:(NSInteger)index {
     if (index != _index) {
         
         if ([self.delegate respondsToSelector:@selector(pagerView:didHidePage:)]) {
@@ -263,7 +255,7 @@
     }
 }
 
-- (void) loadPageAtIndex:(NSInteger)index {
+- (void)loadPageAtIndex:(NSInteger)index {
     
     void(^loadPage)(NSInteger index) = ^(NSInteger index) {
         NSNumber *key = [NSNumber numberWithInteger:index];
@@ -305,7 +297,7 @@
     }
 }
 
-- (void) unLoadHiddenPages {
+- (void)unLoadHiddenPages {
     
     NSMutableArray *toUnLoad = [NSMutableArray array];
     
@@ -336,7 +328,7 @@
     [self.pages removeObjectsForKeys:toUnLoad];
 }
 
-- (void) setContentIndex:(NSInteger)index animated:(BOOL)animated {
+- (void)setContentIndex:(NSInteger)index animated:(BOOL)animated {
     CGFloat x = self.contentView.bounds.size.width * index;
     [self.contentView setContentOffset:CGPointMake(x, 0) animated:animated];
 }
@@ -351,17 +343,9 @@
     if (index >= 0) {
         [self didMovePageToIndex:index];
     }
-    
-    if ([self.delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
-        [self.delegate scrollViewDidEndDecelerating:self.contentView];
-    }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    
-    if ([self.delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
-        [self.delegate scrollViewWillEndDragging:self.contentView withVelocity:velocity targetContentOffset:targetContentOffset];
-    }
     
     NSInteger position  = targetContentOffset->x;
     NSInteger width     = scrollView.bounds.size.width;
@@ -379,18 +363,6 @@
     if (!(position % width)) {
         [self didMovePageToIndex:(position / width)];
     }
-    
-    if ([self.delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
-        [self.delegate scrollViewDidEndScrollingAnimation:self.contentView];
-    }
-}
-
-- (BOOL)respondsToSelector:(SEL)selector {
-    return [self.delegate respondsToSelector:selector] || [super respondsToSelector:selector];
-}
-
-- (void)forwardInvocation:(NSInvocation *)invocation {
-    [invocation invokeWithTarget:self.delegate];
 }
 
 @end
