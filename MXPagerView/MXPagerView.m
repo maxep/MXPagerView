@@ -32,11 +32,45 @@
 
 @property (nonatomic, strong) NSMutableDictionary   *registration;
 @property (nonatomic, strong) NSMutableArray        *reuseQueue;
+
 @end
 
 @implementation MXPagerView {
+    
     CGFloat     _index;
     NSInteger   _count;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit {
+    self.shouldLazyLoad = YES;
 }
 
 - (void)layoutSubviews {
@@ -77,10 +111,16 @@
     
     //Updates index and loads the current selected page
     if ( (_count = [self.dataSource numberOfPagesInPagerView:self]) > 0) {
-        if (_index >= _count)
-            _index = _count-1;
+        if (self.shouldLazyLoad) {
+            if (_index >= _count)
+                _index = _count-1;
+            
+            [self loadPageAtIndex:_index];
+        }
+        else {
+            [self loadAllPages];
+        }
         
-        [self loadPageAtIndex:_index];
         [self setNeedsLayout];
     }
 }
@@ -220,7 +260,7 @@
         [self.delegate pagerView:self willMoveToPageAtIndex:index];
     }
     
-    if ([self.delegate respondsToSelector:@selector(pagerView:willHidePage:)]) {
+    if ([self.delegate respondsToSelector:@selector(pagerView:willHidePage:)] && self.shouldLazyLoad) {
         UIView *page = [self pageAtIndex:_index];
         [self.delegate pagerView:self willHidePage:page];
     }
@@ -234,7 +274,7 @@
 - (void)didMovePageToIndex:(NSInteger)index {
     if (index != _index) {
         
-        if ([self.delegate respondsToSelector:@selector(pagerView:didHidePage:)]) {
+        if ([self.delegate respondsToSelector:@selector(pagerView:didHidePage:)] && self.shouldLazyLoad) {
             UIView *page = [self pageAtIndex:_index];
             [self.delegate pagerView:self didHidePage:page];
         }
@@ -291,13 +331,22 @@
     loadPage(index);
     
     //In  case of slide behavior, its loads the neighbors as well.
-    if (self.transitionStyle == MXPagerViewTransitionStyleScroll) {
+    if (self.transitionStyle == MXPagerViewTransitionStyleScroll && self.shouldLazyLoad) {
         loadPage(index - 1);
         loadPage(index + 1);
     }
 }
 
+- (void) loadAllPages {
+    for (int i = 0; i < _count; i++) {
+        [self loadPageAtIndex:i];
+    }
+}
+
 - (void)unLoadHiddenPages {
+    if (!self.shouldLazyLoad) {
+        return;
+    }
     
     NSMutableArray *toUnLoad = [NSMutableArray array];
     

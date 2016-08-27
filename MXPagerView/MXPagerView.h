@@ -200,6 +200,11 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
 @property(nonatomic,getter=isScrollEnabled) BOOL scrollEnabled;
 
 /**
+ Determine if pages should be lazily loaded
+ */
+@property(assign) BOOL shouldLazyLoad;
+
+/**
  Reloads everything from scratch. redisplays pages.
  */
 - (void)reloadData;
