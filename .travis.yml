@@ -1,16 +1,32 @@
-# references:
-# * http://www.objc.io/issue-6/travis-ci.html
-# * https://github.com/supermarin/xcpretty#usage
-
-osx_image: xcode7
 language: objective-c
-cache: cocoapods
-podfile: Example/Podfile
+osx_image: xcode8
+
+env:
+  global:
+  - FRAMEWORK_NAME=MXPagerView
+
 before_install:
-- gem install cocoapods
-- pod install --project-directory=Example
+- brew update
+- brew outdated carthage || brew upgrade carthage
+
 install:
+- gem install cocoapods
 - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
+
 script:
-- set -o pipefail && xcodebuild -workspace Example/MXPagerView.xcworkspace -scheme MXPagerView-Example -sdk iphonesimulator -configuration Release -destination "platform=iOS Simulator,name=iPhone 6s" | xcpretty -c
+- set -o pipefail && xcodebuild -project MXPagerView.xcodeproj -scheme $FRAMEWORK_NAME -sdk iphonesimulator10.0 -configuration Release
 - pod lib lint --quick
+
+before_deploy:
+- carthage build --no-skip-current
+- carthage archive $FRAMEWORK_NAME
+
+deploy:
+  provider: releases
+  api_key:
+    secure: DC6jmNc8hMJeEZPOq5P3lmvkEjmBITh9A20HIe+BmMYqGUGpRdefxsGemOmt+gEtKDUxq2ICULOPSDKu4eQxaAprkVJpcmYktGUKSGvn2gaGVMci537kpxjJPDc6fnwwTWlrhKxNxC5m4SQICu0c61lAMxgxJ7LzdGgYNGAyApJr0scwqjS1xVadTR0S3t+sVq6AtkGAiQ/nuCh6x0I5V4hk6pwDCaOv8JmhOEfy51uujR0zoZXB/fTnp822btQQ60i5JeVXK3fJIDhPkqmOEVQ+B+TBBSLeeIQzI1V7fb+pNvUTWF60VqVzIaB6Kp2fqwc7IsPwx8uHRX/SkZDN8Sgujq9EDKBEmkCBB0j2Mwhh839M0MiH6fqxSi8dHL6N4NlbZHKy/65zcP1rx/JhPwl4syau6vjg3+NoWVwriEA9lJg6LruFqWYhjAlJZbRGfAFxql3fZxLxqnBszq1FX5QhD9n3/gO8c9IDmjBRZgQbkcm49bq+3hSGCQeJTtLx/twu8Nh0PS8H/h3o0NXpdsZHKggO29N+jD+GcNgnxTO0pe6Jv9qdRpd2btRpvpy3V0xeauY7v3H/c10Bo3+4G4YpC759KY9pNt0fcbUKw7yUJCPbBI/Sc+LbLz48s4KLLalMNgPXZEYr4orMoyTOpczTh1Vc9t6BSlc8NIRKTWc=
+  file: $FRAMEWORK_NAME.framework.zip
+  skip_cleanup: true
+  on:
+    repo: maxep/MXPagerView
+    tags: true
