@@ -64,25 +64,18 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- A UIViewController must adopt the MXPageSegueDelegate protocol in order to perfom MXPageSegue.
+ A UIViewController must adopt the MXPageSegueSource protocol in order to perfom MXPageSegue.
  */
-@protocol MXPageSegueDelegate <NSObject>
+@protocol MXPageSegueSource <NSObject>
 
 @required
 
 /**
- Asks the delegate the page index of the destination view controller.
- 
- @return The destination page index.
- */
-- (NSInteger)pageIndex;
-
-/**
- Sets the requested page controller.
+ Adds the requested page controller.
  
  @param pageViewController The page view controller.
  */
-- (void)setPageViewController:(__kindof UIViewController*)pageViewController;
+- (void)addPageViewController:(__kindof UIViewController *)pageViewController;
 
 @end
 
@@ -96,7 +89,7 @@ extern NSString * const MXSeguePageIdentifierFormat; // @"mx_page_%ld"
 /**
  The source view controller that adopt the MXPageSegueDelegate protocol.
  */
-@property (nonatomic,readonly) __kindof UIViewController<MXPageSegueDelegate> *sourceViewController;
+@property (nonatomic,readonly) __kindof UIViewController<MXPageSegueSource> *sourceViewController;
 
 /**
  Returns index representing page attached to segue.
