@@ -1,6 +1,6 @@
 // PagerViewExample.swift
 //
-// Copyright (c) 2015 Maxime Epain
+// Copyright (c) 2016 Maxime Epain
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,52 +25,50 @@ import MXPagerView
 
 class PagerViewExample: UIViewController, MXPagerViewDelegate, MXPagerViewDataSource, UITableViewDelegate, UITableViewDataSource {
 
+    fileprivate var SpanichWhite : UIColor = UIColor(colorLiteralRed: 0.996, green: 0.992, blue: 0.941, alpha: 1) /*#fefdf0*/
+    
     @IBOutlet weak var pagerView: MXPagerView!
     
     var tableView: UITableView!
     var webView: UIWebView!
-    var textView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //Init pages
-        self.tableView = UITableView()
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.backgroundColor = SpanichWhite
         
-        self.webView = UIWebView()
-        let url = NSURL(string: "http://nshipster.com/");
-        let request = NSURLRequest(url: url! as URL);
-        self.webView.loadRequest(request as URLRequest);
-        
-        self.textView = UITextView()
-        let filePath = Bundle.main.path(forResource: "LongText", ofType: "txt")
-        self.textView.text = try! String(contentsOfFile:filePath!, encoding: String.Encoding.utf8)
+        webView = UIWebView()
+        let url = URL(string: "http://www.aesop.com/")
+        let request = URLRequest(url: url!)
+        webView.loadRequest(request)
         
         //Init title
-        self.navigationItem.title = "Page 0"
+        navigationItem.title = "Page 0"
         
         //Setup pager
-        self.pagerView.gutterWidth = 20
+        pagerView.gutterWidth = 20
         
         //Register UITextView as page
-        self.pagerView.register(UITextView.self, forPageReuseIdentifier: "TextPage")
+        pagerView.register(UITextView.self, forPageReuseIdentifier: "TextPage")
     }
 
     @IBAction func previous(sender: AnyObject) {
-        self.pagerView.showPage(at: (self.pagerView.indexForSelectedPage - 1), animated: true)
+        pagerView.showPage(at: (pagerView.indexForSelectedPage - 1), animated: true)
     }
 
     @IBAction func next(sender: AnyObject) {
-        self.pagerView.showPage(at: (self.pagerView.indexForSelectedPage + 1), animated: true)
+        pagerView.showPage(at: (pagerView.indexForSelectedPage + 1), animated: true)
     }
     
     // MARK: - Pager view delegate
     
     func pagerView(_ pagerView: MXPagerView, didMoveToPageAt index: Int) {
-        self.navigationItem.title = String(format: "Page %li", index)
+        navigationItem.title = "Page \(index)"
     }
     
     // MARK: - Pager view data source
@@ -80,13 +78,14 @@ class PagerViewExample: UIViewController, MXPagerViewDelegate, MXPagerViewDataSo
     }
     
     func pagerView(_ pagerView: MXPagerView, viewForPageAt index: Int) -> UIView? {
-        if index < 3 {
-            return [self.tableView, self.webView, self.textView][index]
+        if index < 2 {
+            return [tableView, webView][index]
         }
         
         let page = pagerView.dequeueReusablePage(withIdentifier: "TextPage") as! UITextView
         let filePath = Bundle.main.path(forResource: "LongText", ofType: "txt")
         page.text = try! String(contentsOfFile:filePath!, encoding: String.Encoding.utf8)
+        page.backgroundColor = SpanichWhite
         
         return page
     }
@@ -102,6 +101,7 @@ class PagerViewExample: UIViewController, MXPagerViewDelegate, MXPagerViewDataSo
         let cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
         cell.textLabel?.text = (indexPath.row % 2 > 0) ? "Text" : "Web"
+        cell.backgroundColor = SpanichWhite
         
         return cell
     }
@@ -110,7 +110,7 @@ class PagerViewExample: UIViewController, MXPagerViewDelegate, MXPagerViewDataSo
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = (indexPath.row % 2) + 1
-        self.pagerView.showPage(at: index, animated:true)
+        pagerView.showPage(at: index, animated:true)
     }
 }
 

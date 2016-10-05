@@ -97,7 +97,7 @@
 		9C18046D1DA3A05F00D08F45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9C1804721DA3A05F00D08F45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C1804761DA3A09500D08F45 /* PagerViewExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagerViewExample.swift; sourceTree = "<group>"; };
-		9C1804781DA3A0F300D08F45 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		9C1804781DA3A0F300D08F45 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		9C1804811DA3A49300D08F45 /* MXPagerView-umbrella.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MXPagerView-umbrella.h"; path = "Framework/MXPagerView-umbrella.h"; sourceTree = SOURCE_ROOT; };
 		9C1804871DA3A5E500D08F45 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		9C1804881DA3A5E500D08F45 /* MXPagerView.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MXPagerView.podspec; sourceTree = SOURCE_ROOT; };
@@ -178,8 +178,8 @@
 		9C18042F1DA39C4C00D08F45 /* Example-objc */ = {
 			isa = PBXGroup;
 			children = (
-				9C1804481DA39CCD00D08F45 /* MXAppDelegate.m */,
 				9C1804471DA39CCD00D08F45 /* MXAppDelegate.h */,
+				9C1804481DA39CCD00D08F45 /* MXAppDelegate.m */,
 				9C18044A1DA39CCD00D08F45 /* MXPagerViewExample.h */,
 				9C18044B1DA39CCD00D08F45 /* MXPagerViewExample.m */,
 				9C1804461DA39CCD00D08F45 /* LongText.txt */,

@@ -23,11 +23,12 @@
 #import "MXPagerViewExample.h"
 #import <MXPagerView/MXPagerView.h>
 
+#define SPANISH_WHITE [UIColor colorWithRed:0.996 green:0.992 blue:0.941 alpha:1] /*#fefdf0*/
+
 @interface MXPagerViewExample () <MXPagerViewDelegate, MXPagerViewDataSource, UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet MXPagerView *pagerView;
 @property (nonatomic, strong) UITableView   *tableView;
 @property (nonatomic, strong) UIWebView     *webView;
-@property (nonatomic, strong) UITextView    *textView;
 @end
 
 @implementation MXPagerViewExample
@@ -67,22 +68,11 @@
     if (!_webView) {
         // Add a web page
         _webView = [[UIWebView alloc] init];
-        NSString *strURL = @"http://nshipster.com/";
-        NSURL *url = [NSURL URLWithString:strURL];
+        NSURL *url = [NSURL URLWithString:@"http://www.aesop.com/"];
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
         [_webView loadRequest:urlRequest];
     }
     return _webView;
-}
-
-- (UITextView *)textView {
-    if (!_textView) {
-        // Add a text page
-        _textView = [[UITextView alloc] init];
-        NSString *filePath = [[NSBundle mainBundle]pathForResource:@"LongText" ofType:@"txt"];
-        _textView.text = [[NSString alloc]initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    }
-    return _textView;
 }
 
 #pragma mark <MXPagerViewDelegate>
@@ -98,14 +88,15 @@
 }
 
 - (UIView *)pagerView:(MXPagerView *)pagerView viewForPageAtIndex:(NSInteger)index {
-    if (index < 3) {
-        return @[self.tableView, self.webView, self.textView][index];
+    if (index < 2) {
+        return @[self.tableView, self.webView][index];
     }
     
     //Dequeue reusable page
     UITextView *page = [self.pagerView dequeueReusablePageWithIdentifier:@"TextPage"];
-    NSString *filePath = [[NSBundle mainBundle]pathForResource:@"LongText" ofType:@"txt"];
-    page.text = [[NSString alloc]initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"LongText" ofType:@"txt"];
+    page.text = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    page.backgroundColor = SPANISH_WHITE;
     
     return page;
 }
@@ -113,7 +104,6 @@
 #pragma mark <UITableViewDelegate>
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     NSInteger index = (indexPath.row % 2) + 1;
     [self.pagerView showPageAtIndex:index animated:YES];
 }
@@ -132,6 +122,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     cell.textLabel.text = (indexPath.row % 2)? @"Text": @"Web";
+    cell.backgroundColor = SPANISH_WHITE;
     
     return cell;
 }
