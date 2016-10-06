@@ -86,8 +86,12 @@
 
 #pragma mark <MXPageSegueSource>
 
-- (void)addPageViewController:(UIViewController *)pageViewController {
-    self.pageViewControllers[@(_pageIndex)] = pageViewController;
+-(NSInteger)pageIndex {
+    return _pageIndex;
+}
+
+- (void)setPageViewController:(__kindof UIViewController *)pageViewController atIndex:(NSInteger)index {
+    self.pageViewControllers[@(index)] = pageViewController;
 }
 
 @end
@@ -99,10 +103,21 @@ NSString * const MXSeguePageIdentifierFormat = @"mx_page_%ld";
 @implementation MXPageSegue
 
 @dynamic sourceViewController;
+@synthesize pageIndex = _pageIndex;
+
+- (instancetype)initWithIdentifier:(nullable NSString *)identifier source:(UIViewController <MXPageSegueSource>*)source destination:(UIViewController *)destination {
+    if (self = [super initWithIdentifier:identifier source:source destination:destination]) {
+        
+        if ([source respondsToSelector:@selector(pageIndex)]) {
+            _pageIndex = source.pageIndex;
+        }
+    }
+    return self;
+}
 
 - (void)perform {
     [self.sourceViewController willMoveToParentViewController:self.destinationViewController];
-    [self.sourceViewController addPageViewController:self.destinationViewController];
+    [self.sourceViewController setPageViewController:self.destinationViewController atIndex:self.pageIndex];
     [self.sourceViewController didMoveToParentViewController:self.destinationViewController];
 }
 

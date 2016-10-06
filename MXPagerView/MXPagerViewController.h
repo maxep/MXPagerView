@@ -71,11 +71,17 @@ NS_ASSUME_NONNULL_BEGIN
 @required
 
 /**
- Adds the requested page controller.
+ The destination page index.
+ */
+@property (nonatomic, readonly) NSInteger pageIndex;
+
+/**
+ Sets the requested page controller at the required index.
  
  @param pageViewController The page view controller.
+ @param index              The page index.
  */
-- (void)addPageViewController:(__kindof UIViewController *)pageViewController;
+- (void)setPageViewController:(__kindof UIViewController *)pageViewController atIndex:(NSInteger)index;
 
 @end
 
