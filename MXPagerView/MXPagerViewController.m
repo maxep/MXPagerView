@@ -27,7 +27,6 @@
 @end
 
 @implementation MXPagerViewController {
-    UIViewController *_pageViewController;
     NSInteger _pageIndex;
 }
 

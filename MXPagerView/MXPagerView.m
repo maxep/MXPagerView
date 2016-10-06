@@ -89,8 +89,8 @@
         animated = (self.transitionStyle == MXPagerViewTransitionStyleTab)? NO : animated;
         
         [self willMovePageToIndex:index];
-        [self setContentIndex:index animated:animated];
         _index = index;
+        [self setContentIndex:index animated:animated];
     }
 }
 
@@ -235,9 +235,8 @@
 - (void)loadPageAtIndex:(NSInteger)index {
     
     void(^loadPage)(NSInteger index) = ^(NSInteger index) {
-        NSNumber *key = [NSNumber numberWithInteger:index];
         
-        if (!self.pages[key] && (index >= 0) && (index < _count)) {
+        if (!self.pages[@(index)] && (index >= 0) && (index < _count)) {
             
             //Load page
             UIView *page = [self.dataSource pagerView:self viewForPageAtIndex:index];
@@ -248,9 +247,10 @@
             page.frame = frame;
             
             [self.contentView addSubview:page];
+            [self.contentView setNeedsLayout];
             
             //Save page
-            [self.pages setObject:page forKey:key];
+            self.pages[@(index)] = page;
             if (page.reuseIdentifier) {
                 [self.reuseQueue addObject:page];
             }
