@@ -149,25 +149,32 @@
 
 - (UIView *)dequeueReusablePageWithIdentifier:(NSString *)identifier {
     
-    for (UIView *page in self.reuseQueue) {
-        if (!page.superview && [page.reuseIdentifier isEqualToString:identifier]) {
-            return page;
+    UIView *page = nil;
+    
+    for (UIView *reuse in self.reuseQueue) {
+        if ([reuse.reuseIdentifier isEqualToString:identifier]) {
+            page = reuse;
+            break;
         }
     }
     
-    id builder = self.registration[identifier];
-    NSAssert(builder, @"unable to dequeue a page with identifier %@ - must register a nib or a class for the identifier", identifier);
-    
-    UIView *page = nil;
-    
-    if ([builder isKindOfClass:[UINib class]]) {
-        page = [[(UINib *)builder instantiateWithOwner:nil options:nil] firstObject];
-    } else if ([builder isKindOfClass:[NSString class]]) {
-        page = [[NSClassFromString(builder) alloc] init];
+    if (!page) {
+        id builder = self.registration[identifier];
+        NSAssert(builder, @"unable to dequeue a page with identifier %@ - must register a nib or a class for the identifier", identifier);
+        
+        if ([builder isKindOfClass:[UINib class]]) {
+            page = [[(UINib *)builder instantiateWithOwner:nil options:nil] firstObject];
+        } else if ([builder isKindOfClass:[NSString class]]) {
+            page = [[NSClassFromString(builder) alloc] init];
+        } else {
+            page = [UIView new];
+        }
+        
+        objc_setAssociatedObject(page, @selector(reuseIdentifier), identifier, OBJC_ASSOCIATION_COPY);
+    } else {
+        [self.reuseQueue removeObject:page];
+        [page prepareForReuse];
     }
-    
-    objc_setAssociatedObject(page, @selector(reuseIdentifier), identifier, OBJC_ASSOCIATION_COPY);
-    [page prepareForReuse];
     
     return page;
 }
@@ -260,9 +267,6 @@
             
             //Save page
             self.pages[@(index)] = page;
-            if (page.reuseIdentifier) {
-                [self.reuseQueue addObject:page];
-            }
         }
     };
     
@@ -292,6 +296,10 @@
                 
                 [page removeFromSuperview];
                 [toUnLoad addObject:key];
+                
+                if (page.reuseIdentifier) {
+                    [self.reuseQueue addObject:page];
+                }
                 
                 if ([self.delegate respondsToSelector:@selector(pagerView:didEndDisplayingPage:atIndex:)]) {
                     [self.delegate pagerView:self didEndDisplayingPage:page atIndex:index];
