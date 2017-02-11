@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  @param pagerView A pager object informing the delegate about the impending move.
  @param index     The selected page index.
  */
-- (void)pagerView:(MXPagerView *)pagerView willMoveToPageAtIndex:(NSInteger)index;
+- (void)pagerView:(MXPagerView *)pagerView willMoveToPage:(UIView *)page atIndex:(NSInteger)index;
 
 /**
  Tells the delegate that the pager did move to a specified page.
@@ -56,7 +56,11 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  @param pagerView A pager object informing the delegate about the impending move.
  @param index     The selected page index.
  */
-- (void)pagerView:(MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index;
+- (void)pagerView:(MXPagerView *)pagerView didMoveToPage:(UIView *)page atIndex:(NSInteger)index;
+
+- (void)pagerView:(MXPagerView *)pagerView willDisplayPage:(UIView *)page atIndex:(NSInteger)index;
+
+- (void)pagerView:(MXPagerView *)pagerView didEndDisplayingPage:(UIView *)page atIndex:(NSInteger)index;
 
 @end
 

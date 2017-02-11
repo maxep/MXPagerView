@@ -67,7 +67,7 @@ class PagerViewExample: UIViewController, MXPagerViewDelegate, MXPagerViewDataSo
     
     // MARK: - Pager view delegate
     
-    func pagerView(_ pagerView: MXPagerView, didMoveToPageAt index: Int) {
+    func pagerView(_ pagerView: MXPagerView, didMoveToPage page: UIView, at index: Int) {
         navigationItem.title = "Page \(index)"
     }
     

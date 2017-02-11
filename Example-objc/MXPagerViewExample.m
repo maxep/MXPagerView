@@ -77,7 +77,7 @@
 
 #pragma mark <MXPagerViewDelegate>
 
-- (void)pagerView:(nonnull MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index {
+- (void)pagerView:(nonnull MXPagerView *)pagerView didMoveToPage:(nonnull UIView *)page atIndex:(NSInteger)index {
     self.navigationItem.title = [NSString stringWithFormat:@"Page %li", index];
 }
 

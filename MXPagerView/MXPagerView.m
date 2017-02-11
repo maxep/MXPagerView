@@ -29,7 +29,7 @@
 @end
 
 @interface MXPagerView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
-@property (nonatomic, strong) NSMutableDictionary   *pages;
+@property (nonatomic, strong) NSMutableDictionary<NSNumber *, UIView *> *pages;
 
 @property (nonatomic, strong) NSMutableDictionary   *registration;
 @property (nonatomic, strong) NSMutableArray        *reuseQueue;
@@ -73,6 +73,10 @@
     self.showsVerticalScrollIndicator = NO;
     self.showsHorizontalScrollIndicator = NO;
     self.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    
+    self.pages = [NSMutableDictionary dictionary];
+    self.registration = [NSMutableDictionary dictionary];
+    self.reuseQueue = [NSMutableArray array];
 }
 
 - (void)layoutSubviews {
@@ -180,13 +184,6 @@
     super.delegate = _forwarder;
 }
 
-- (NSMutableDictionary *)pages {
-    if (!_pages) {
-        _pages = [NSMutableDictionary dictionary];
-    }
-    return _pages;
-}
-
 - (UIView *)selectedPage {
     NSNumber *key = [NSNumber numberWithInteger:_index];
     return self.pages[key];
@@ -200,20 +197,6 @@
     _transitionStyle = transitionStyle;
     //the tab behavior disable the scroll
     self.scrollEnabled = (transitionStyle != MXPagerViewTransitionStyleTab);
-}
-
-- (NSMutableDictionary *)registration {
-    if (!_registration) {
-        _registration = [NSMutableDictionary dictionary];
-    }
-    return _registration;
-}
-
-- (NSMutableArray *)reuseQueue {
-    if (!_reuseQueue) {
-        _reuseQueue = [NSMutableArray array];
-    }
-    return _reuseQueue;
 }
 
 - (void)setGutterWidth:(CGFloat)gutterWidth {
@@ -237,14 +220,16 @@
 - (void)willMovePageToIndex:(NSInteger)index {
     [self loadPageAtIndex:index];
     
-    if ([self.delegate respondsToSelector:@selector(pagerView:willMoveToPageAtIndex:)]) {
-        [self.delegate pagerView:self willMoveToPageAtIndex:index];
+    if ([self.delegate respondsToSelector:@selector(pagerView:willMoveToPage:atIndex:)]) {
+        UIView *page = self.pages[@(index)];
+        [self.delegate pagerView:self willMoveToPage:page atIndex:index];
     }
 }
 
 - (void)didMovePageToIndex:(NSInteger)index {
-    if ([self.delegate respondsToSelector:@selector(pagerView:didMoveToPageAtIndex:)]) {
-        [self.delegate pagerView:self didMoveToPageAtIndex:index];
+    if ([self.delegate respondsToSelector:@selector(pagerView:didMoveToPage:atIndex:)]) {
+        UIView *page = self.pages[@(index)];
+        [self.delegate pagerView:self didMoveToPage:page atIndex:index];
     }
     
     //The page did change, now unload hidden pages
@@ -265,6 +250,10 @@
             frame.size = self.bounds.size;
             frame.origin = CGPointMake(frame.size.width * index, 0);
             page.frame = frame;
+            
+            if ([self.delegate respondsToSelector:@selector(pagerView:willDisplayPage:atIndex:)]) {
+                [self.delegate pagerView:self willDisplayPage:page atIndex:index];
+            }
             
             [self addSubview:page];
             [self setNeedsLayout];
@@ -303,6 +292,10 @@
                 
                 [page removeFromSuperview];
                 [toUnLoad addObject:key];
+                
+                if ([self.delegate respondsToSelector:@selector(pagerView:didEndDisplayingPage:atIndex:)]) {
+                    [self.delegate pagerView:self didEndDisplayingPage:page atIndex:index];
+                }
             }
         }
     }
