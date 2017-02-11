@@ -39,7 +39,7 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
 /**
  The delegate of a MXPagerView object may adopt the MXPagerViewDelegate protocol. Optional methods of the protocol allow the delegate to manage selections.
  */
-@protocol MXPagerViewDelegate <NSObject>
+@protocol MXPagerViewDelegate <UIScrollViewDelegate>
 
 @optional
 /**
@@ -57,15 +57,6 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  @param index     The selected page index.
  */
 - (void)pagerView:(MXPagerView *)pagerView didMoveToPageAtIndex:(NSInteger)index;
-
-
-/**
- Tells the delegate when the user scrolls the pager view within the receiver.
- The delegate typically implements this method to obtain the change in progress from pagerView.
-
- @param pagerView The pager-view object in which the scrolling occurred.
- */
-- (void)pagerViewDidScroll:(MXPagerView *)pagerView;
 
 @end
 
@@ -95,14 +86,14 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  
  @return An object inheriting from UIView that the pager can use for the specified page.
  */
-- (nullable __kindof UIView *) pagerView:(MXPagerView *)pagerView viewForPageAtIndex:(NSInteger)index;
+- (nullable __kindof UIView *)pagerView:(MXPagerView *)pagerView viewForPageAtIndex:(NSInteger)index;
 
 @end
 
 /**
  A MXPagerView  lets the user navigate between pages of content. Navigation can be controlled programmatically by your app or directly by the user using gestures.
  */
-@interface MXPagerView : UIView
+@interface MXPagerView : UIScrollView
 
 /**
  Delegate instance that adopt the MXPagerViewDelegate.
@@ -138,11 +129,6 @@ typedef NS_ENUM(NSInteger, MXPagerViewTransitionStyle) {
  The pager transition style.
  */
 @property (nonatomic, assign) MXPagerViewTransitionStyle transitionStyle;
-
-/**
- Default YES. turn off any dragging temporarily
- */
-@property (nonatomic, getter=isScrollEnabled) BOOL scrollEnabled;
 
 /**
  The pager progress, from 0 to the number of page.
