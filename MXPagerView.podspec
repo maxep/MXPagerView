@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MXPagerView"
-  s.version          = "0.1.4"
+  s.version          = "0.2.0"
   s.summary          = "Pager view with reusable page and storyboard support."
 
 # This description is used to generate tags and improve search results.
@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/maxep/MXPagerView"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
-  s.author           = { "Maxime Epain" => "maime.epain@gmail.com" }
+  s.author           = { "Maxime Epain" => "maxime.epain@gmail.com" }
   s.source           = { :git => "https://github.com/maxep/MXPagerView.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/MaximeEpain'
 
