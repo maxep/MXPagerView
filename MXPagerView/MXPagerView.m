@@ -91,7 +91,9 @@
     
     if (!CGSizeEqualToSize(size, self.contentSize)) {
         self.contentSize = size;
-        [self setContentIndex:_index animated:NO];
+        
+        CGFloat x = self.bounds.size.width * _index;
+        [super setContentOffset:CGPointMake(x, 0) animated:NO];
         
         //Layout loaded pages
         CGRect frame = CGRectZero;
@@ -126,9 +128,8 @@
         //The tab behavior disable animation
         animated = (self.transitionStyle == MXPagerViewTransitionStyleTab)? NO : animated;
         
-        [self willMovePageToIndex:index];
-        _index = index;
-        [self setContentIndex:index animated:animated];
+        CGFloat x = self.bounds.size.width * index;
+        [self setContentOffset:CGPointMake(x, 0) animated:animated];
     }
 }
 
@@ -310,12 +311,22 @@
     [self.pages removeObjectsForKeys:toUnLoad];
 }
 
-- (void)setContentIndex:(NSInteger)index animated:(BOOL)animated {
-    CGFloat x = self.bounds.size.width * index;
-    [self setContentOffset:CGPointMake(x, 0) animated:animated];
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
     
-    if(!animated) {
-        [self didMovePageToIndex:index];
+    if (!fmod(contentOffset.x, self.bounds.size.width)) {
+        NSInteger index = contentOffset.x /self.bounds.size.width;
+        
+        [self willMovePageToIndex:index];
+        [super setContentOffset:contentOffset animated:animated];
+        
+        _index = index;
+        
+        if(!animated) {
+            [self didMovePageToIndex:index];
+        }
+        
+    } else {
+        [super setContentOffset:contentOffset animated:animated];
     }
 }
 
