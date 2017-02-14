@@ -65,14 +65,11 @@
     _forwarder.pagerView = self;
     
     super.delegate = _forwarder;
-    self.scrollsToTop = NO;
     self.pagingEnabled = YES;
+    self.scrollsToTop = NO;
     self.directionalLockEnabled = YES;
-    self.alwaysBounceVertical = NO;
-    self.alwaysBounceHorizontal = NO;
     self.showsVerticalScrollIndicator = NO;
     self.showsHorizontalScrollIndicator = NO;
-    self.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     
     self.pages = [NSMutableDictionary dictionary];
     self.registration = [NSMutableDictionary dictionary];

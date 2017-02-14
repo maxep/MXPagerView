@@ -86,7 +86,7 @@
 
 #pragma mark <MXPageSegueSource>
 
--(NSInteger)pageIndex {
+- (NSInteger)pageIndex {
     return _pageIndex;
 }
 
@@ -116,9 +116,10 @@ NSString * const MXSeguePageIdentifierFormat = @"mx_page_%ld";
 }
 
 - (void)perform {
-    [self.sourceViewController willMoveToParentViewController:self.destinationViewController];
+    [self.destinationViewController willMoveToParentViewController:self.sourceViewController];
+    [self.sourceViewController addChildViewController:self.destinationViewController];
     [self.sourceViewController setPageViewController:self.destinationViewController atIndex:self.pageIndex];
-    [self.sourceViewController didMoveToParentViewController:self.destinationViewController];
+    [self.destinationViewController didMoveToParentViewController:self.sourceViewController];
 }
 
 @end
