@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode8
+osx_image: xcode9
 
 env:
   global:
@@ -14,7 +14,7 @@ install:
 - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
 
 script:
-- set -o pipefail && xcodebuild -project MXPagerView.xcodeproj -scheme $FRAMEWORK_NAME -sdk iphonesimulator10.0 -configuration Release
+- set -o pipefail && xcodebuild -project MXPagerView.xcodeproj -scheme $FRAMEWORK_NAME -sdk iphonesimulator11.0 -configuration Release
 - pod lib lint --quick
 
 before_deploy:

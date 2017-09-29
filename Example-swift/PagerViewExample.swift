@@ -25,8 +25,7 @@ import MXPagerView
 
 class PagerViewExample: UIViewController, MXPagerViewDelegate, MXPagerViewDataSource, UITableViewDelegate, UITableViewDataSource {
 
-    fileprivate var SpanichWhite : UIColor = UIColor(colorLiteralRed: 0.996, green: 0.992, blue: 0.941, alpha: 1) /*#fefdf0*/
-    
+    fileprivate var SpanichWhite = #colorLiteral(red: 0.9960784314, green: 0.9921568627, blue: 0.9411764706, alpha: 1) // FEFDF0
     @IBOutlet weak var pagerView: MXPagerView!
     
     var tableView: UITableView!
@@ -95,7 +94,6 @@ class PagerViewExample: UIViewController, MXPagerViewDelegate, MXPagerViewDataSo
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 50
     }
-    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
