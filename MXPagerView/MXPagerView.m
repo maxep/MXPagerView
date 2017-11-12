@@ -239,42 +239,15 @@
         UIView *page = self.pages[@(index)];
         [self.delegate pagerView:self willMoveToPage:page atIndex:index];
     }
-    
-    if ([self.delegate respondsToSelector:@selector(pagerView:willHidePage:)] && self.shouldLazyLoad) {
-        UIView *page = [self pageAtIndex:_index];
-        [self.delegate pagerView:self willHidePage:page];
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(pagerView:willShowPage:)]) {
-        UIView *page = [self pageAtIndex:index];
-        [self.delegate pagerView:self willShowPage:page];
-    }
 }
 
 - (void)didMovePageToIndex:(NSInteger)index {
-    if (index != _index) {
-        
-        if ([self.delegate respondsToSelector:@selector(pagerView:didHidePage:)] && self.shouldLazyLoad) {
-            UIView *page = [self pageAtIndex:_index];
-            [self.delegate pagerView:self didHidePage:page];
-        }
-        
-        _index = index;
-
-        if ([self.delegate respondsToSelector:@selector(pagerView:didMoveToPageAtIndex:)]) {
-            [self.delegate pagerView:self didMoveToPageAtIndex:index];
-        }
-        
-        if ([self.delegate respondsToSelector:@selector(pagerView:didShowPage:)]) {
-            UIView *page = [self pageAtIndex:index];
-            [self.delegate pagerView:self didShowPage:page];
-        }
-                
-        //The page did change, now unload hidden pages
-        [self unLoadHiddenPages];
+    if ([self.delegate respondsToSelector:@selector(pagerView:didMoveToPage:atIndex:)]) {
+        UIView *page = self.pages[@(index)];
+        [self.delegate pagerView:self didMoveToPage:page atIndex:index];
     }
     
-    //The page did change, now unload hidden pages
+        //The page did change, now unload hidden pages
     [self unLoadHiddenPages];
 }
 
