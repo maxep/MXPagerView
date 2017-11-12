@@ -33,9 +33,11 @@
 
 @property (nonatomic, strong) NSMutableDictionary   *registration;
 @property (nonatomic, strong) NSMutableArray        *reuseQueue;
+
 @end
 
 @implementation MXPagerView {
+    
     CGFloat     _index;
     NSInteger   _count;
     
@@ -114,8 +116,16 @@
     
     //Updates index and loads the current selected page
     if ( (_count = [self.dataSource numberOfPagesInPagerView:self]) > 0) {
-        _index = MIN(_index, _count - 1);
-        [self loadPageAtIndex:_index];
+        if (self.shouldLazyLoad) {
+            if (_index >= _count)
+                _index = _count-1;
+            
+            [self loadPageAtIndex:_index];
+        }
+        else {
+            [self loadAllPages];
+        }
+        
         [self setNeedsLayout];
     }
 }
@@ -237,7 +247,7 @@
         [self.delegate pagerView:self didMoveToPage:page atIndex:index];
     }
     
-    //The page did change, now unload hidden pages
+        //The page did change, now unload hidden pages
     [self unLoadHiddenPages];
 }
 
@@ -271,13 +281,22 @@
     loadPage(index);
     
     //In  case of slide behavior, its loads the neighbors as well.
-    if (self.transitionStyle == MXPagerViewTransitionStyleScroll) {
+    if (self.transitionStyle == MXPagerViewTransitionStyleScroll && self.shouldLazyLoad) {
         loadPage(index - 1);
         loadPage(index + 1);
     }
 }
 
+- (void) loadAllPages {
+    for (int i = 0; i < _count; i++) {
+        [self loadPageAtIndex:i];
+    }
+}
+
 - (void)unLoadHiddenPages {
+    if (!self.shouldLazyLoad) {
+        return;
+    }
     
     NSMutableArray *toUnLoad = [NSMutableArray array];
     
