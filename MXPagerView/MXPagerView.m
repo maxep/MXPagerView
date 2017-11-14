@@ -122,6 +122,7 @@
 
 - (void)showPageAtIndex:(NSInteger)index animated:(BOOL)animated {
     if (index >= 0 && index < _count && index != _index) {
+        _index = index;
         //The tab behavior disable animation
         animated = (self.transitionStyle == MXPagerViewTransitionStyleTab)? NO : animated;
         
