@@ -11,7 +11,7 @@ before_install:
 
 install:
 - gem install cocoapods
-- gem install xcpretty --no-rdoc --no-ri --no-document --quiet
+- gem install xcpretty --no-document --quiet
 
 script:
 - set -o pipefail && xcodebuild -project MXParallaxHeader.xcodeproj -scheme $FRAMEWORK_NAME -sdk iphonesimulator12.2 -configuration Release | xcpretty -c
