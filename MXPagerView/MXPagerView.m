@@ -38,7 +38,7 @@
 @implementation MXPagerView {
     CGFloat     _index;
     NSInteger   _count;
-    
+
     MXPagerViewDelegateForwarder *_forwarder;
 }
 
@@ -63,14 +63,14 @@
 - (void)initialize {
     _forwarder = [[MXPagerViewDelegateForwarder alloc] init];
     _forwarder.pagerView = self;
-    
+
     super.delegate = _forwarder;
     self.pagingEnabled = YES;
     self.scrollsToTop = NO;
     self.directionalLockEnabled = YES;
     self.showsVerticalScrollIndicator = NO;
     self.showsHorizontalScrollIndicator = NO;
-    
+
     self.pages = [NSMutableDictionary dictionary];
     self.registration = [NSMutableDictionary dictionary];
     self.reuseQueue = [NSMutableArray array];
@@ -78,20 +78,20 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     if (_count <= 0) {
         [self reloadData];
     }
-    
+
     CGSize size = self.bounds.size;
     size.width = size.width * _count;
-    
+
     if (!CGSizeEqualToSize(size, self.contentSize)) {
         self.contentSize = size;
-        
+
         CGFloat x = self.bounds.size.width * _index;
         [super setContentOffset:CGPointMake(x, 0) animated:NO];
-        
+
         //Layout loaded pages
         CGRect frame = CGRectZero;
         frame.size = self.bounds.size;
@@ -104,14 +104,14 @@
 }
 
 - (void)reloadData {
-    
+
     // Removes all current pages.
     for (NSNumber *key in self.pages) {
         UIView *page = self.pages[key];
         [page removeFromSuperview];
     }
     [self.pages removeAllObjects];
-    
+
     //Updates index and loads the current selected page
     if ( (_count = [self.dataSource numberOfPagesInPagerView:self]) > 0) {
         _index = MIN(_index, _count - 1);
@@ -124,7 +124,7 @@
     if (index >= 0 && index < _count && index != _index) {
         //The tab behavior disable animation
         animated = (self.transitionStyle == MXPagerViewTransitionStyleTab)? NO : animated;
-        
+
         CGFloat x = self.bounds.size.width * index;
         [self setContentOffset:CGPointMake(x, 0) animated:animated];
     }
@@ -146,20 +146,20 @@
 }
 
 - (UIView *)dequeueReusablePageWithIdentifier:(NSString *)identifier {
-    
+
     UIView *page = nil;
-    
+
     for (UIView *reuse in self.reuseQueue) {
         if ([reuse.reuseIdentifier isEqualToString:identifier]) {
             page = reuse;
             break;
         }
     }
-    
+
     if (!page) {
         id builder = self.registration[identifier];
         NSAssert(builder, @"unable to dequeue a page with identifier %@ - must register a nib or a class for the identifier", identifier);
-        
+
         if ([builder isKindOfClass:[UINib class]]) {
             page = [[(UINib *)builder instantiateWithOwner:nil options:nil] firstObject];
         } else if ([builder isKindOfClass:[NSString class]]) {
@@ -167,13 +167,13 @@
         } else {
             page = [UIView new];
         }
-        
+
         objc_setAssociatedObject(page, @selector(reuseIdentifier), identifier, OBJC_ASSOCIATION_COPY);
     } else {
         [self.reuseQueue removeObject:page];
         [page prepareForReuse];
     }
-    
+
     return page;
 }
 
@@ -216,7 +216,7 @@
 - (CGFloat)progress {
     CGFloat position  = self.contentOffset.x;
     CGFloat width     = self.bounds.size.width;
-    
+
     return position / width;
 }
 
@@ -224,7 +224,7 @@
 
 - (void)willMovePageToIndex:(NSInteger)index {
     [self loadPageAtIndex:index];
-    
+
     if ([self.delegate respondsToSelector:@selector(pagerView:willMoveToPage:atIndex:)]) {
         UIView *page = self.pages[@(index)];
         [self.delegate pagerView:self willMoveToPage:page atIndex:index];
@@ -236,40 +236,40 @@
         UIView *page = self.pages[@(index)];
         [self.delegate pagerView:self didMoveToPage:page atIndex:index];
     }
-    
+
     //The page did change, now unload hidden pages
     [self unLoadHiddenPages];
 }
 
 - (void)loadPageAtIndex:(NSInteger)index {
-    
+
     void(^loadPage)(NSInteger index) = ^(NSInteger index) {
-        
-        if (!self.pages[@(index)] && (index >= 0) && (index < _count)) {
-            
+
+        if (!self.pages[@(index)] && (index >= 0) && (index < self->_count)) {
+
             //Load page
             UIView *page = [self.dataSource pagerView:self viewForPageAtIndex:index];
-            
+
             //Layout page
             CGRect frame = CGRectZero;
             frame.size = self.bounds.size;
             frame.origin = CGPointMake(frame.size.width * index, 0);
             page.frame = frame;
-            
+
             if ([self.delegate respondsToSelector:@selector(pagerView:willDisplayPage:atIndex:)]) {
                 [self.delegate pagerView:self willDisplayPage:page atIndex:index];
             }
-            
+
             [self addSubview:page];
             [self setNeedsLayout];
-            
+
             //Save page
             self.pages[@(index)] = page;
         }
     };
-    
+
     loadPage(index);
-    
+
     //In  case of slide behavior, its loads the neighbors as well.
     if (self.transitionStyle == MXPagerViewTransitionStyleScroll) {
         loadPage(index - 1);
@@ -278,27 +278,27 @@
 }
 
 - (void)unLoadHiddenPages {
-    
+
     NSMutableArray *toUnLoad = [NSMutableArray array];
-    
+
     for (NSNumber *key in self.pages) {
         NSInteger index = [key integerValue];
-        
+
         if (index != _index) {
-            
+
             //In case if slide behavior, it keeps the neighbors, otherwise it unloads all hidden pages.
             if ((self.transitionStyle == MXPagerViewTransitionStyleTab) ||
                 ( (index != _index-1) && (index != _index+1) )) {
-                
+
                 UIView *page = self.pages[key];
-                
+
                 [page removeFromSuperview];
                 [toUnLoad addObject:key];
-                
+
                 if (page.reuseIdentifier) {
                     [self.reuseQueue addObject:page];
                 }
-                
+
                 if ([self.delegate respondsToSelector:@selector(pagerView:didEndDisplayingPage:atIndex:)]) {
                     [self.delegate pagerView:self didEndDisplayingPage:page atIndex:index];
                 }
@@ -309,19 +309,19 @@
 }
 
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
-    
+
     if (!fmod(contentOffset.x, self.bounds.size.width)) {
         NSInteger index = contentOffset.x /self.bounds.size.width;
-        
+
         [self willMovePageToIndex:index];
         [super setContentOffset:contentOffset animated:animated];
-        
+
         _index = index;
-        
+
         if(!animated) {
             [self didMovePageToIndex:index];
         }
-        
+
     } else {
         [super setContentOffset:contentOffset animated:animated];
     }
@@ -332,23 +332,23 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSInteger position  = scrollView.contentOffset.x;
     NSInteger width     = scrollView.bounds.size.width;
-    
+
     _index = position / width;
     [self didMovePageToIndex:_index];
-    
+
     if ([self.delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
         [self.delegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    
+
     NSInteger position  = targetContentOffset->x;
     NSInteger width     = scrollView.bounds.size.width;
-    
+
     NSInteger index = position / width;
     [self willMovePageToIndex:index];
-    
+
     if ([self.delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
         [self.delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
@@ -356,7 +356,7 @@
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     [self didMovePageToIndex:_index];
-    
+
     if ([self.delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
         [self.delegate scrollViewDidEndScrollingAnimation:scrollView];
     }
@@ -365,10 +365,10 @@
 #pragma mark <UIGestureRecognizerDelegate>
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        CGPoint velocity = [(UIPanGestureRecognizer*)gestureRecognizer velocityInView:self];
-        
+
+    if (gestureRecognizer == self.panGestureRecognizer) {
+        CGPoint velocity = [self.panGestureRecognizer velocityInView:self];
+
         //Lock vertical pan gesture.
         if (fabs(velocity.x) < fabs(velocity.y)) {
             return NO;
@@ -407,7 +407,7 @@
 }
 
 - (void)prepareForReuse {
-    
+
 }
 
 @end
