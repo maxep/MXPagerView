@@ -565,6 +565,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Framework/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				MODULEMAP_FILE = Framework/module.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.maxep.MXPagerView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -584,6 +585,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Framework/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				MODULEMAP_FILE = Framework/module.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.maxep.MXPagerView;
 				PRODUCT_NAME = "$(TARGET_NAME)";

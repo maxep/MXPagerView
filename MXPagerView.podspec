@@ -1,14 +1,6 @@
-#
-# Be sure to run `pod lib lint MXPagerView.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = "MXPagerView"
-  s.version          = "0.2.1"
+  s.version          = "1.0.0"
   s.summary          = "Pager view with reusable page and storyboard support."
 
 # This description is used to generate tags and improve search results.
