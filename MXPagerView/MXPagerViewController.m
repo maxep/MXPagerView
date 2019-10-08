@@ -1,6 +1,6 @@
 // MXPagerViewController.m
 //
-// Copyright (c) 2017 Maxime Epain
+// Copyright © 2019 Maxime Epain
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
