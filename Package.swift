@@ -14,5 +14,5 @@ let package = Package(
             path: "MXPagerView"
         )
     ],
-    swiftLanguageVersions: [.v5,.v4]
+    cLanguageStandard: .c11
 )
